@@ -1,0 +1,2 @@
+Code 6 Error 뜨면 이거 써서 한 번 빌드하면 됨
+Build.bat -Target="PortFolioEditor Win64 Development -Project=\"C:\Unreal\PortFolio\PortFolio.uproject\""  -Quiet -WaitMutex -FromMsBuild"
