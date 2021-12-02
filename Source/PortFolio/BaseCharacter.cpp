@@ -33,7 +33,7 @@ ABaseCharacter::ABaseCharacter()
 		Cursor->SetDecalMaterial(MI_Cursor.Object);
 		Cursor->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 		Cursor->SetWorldLocation(FVector(-10, 0, -90));
-		Cursor->SetWorldRotation(FRotator(0.f, 90.f, 0.f));
+		Cursor->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
 	}
 	
 }
@@ -44,17 +44,25 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 마우스 커서 위치로 데칼 옮기기
-	FHitResult result;
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
-	Cursor->SetWorldLocationAndRotation(result.Location, UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f)));
+
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	// 마우스 커서 위치로 데칼 옮기기
+	FHitResult result;
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
+	if (result.bBlockingHit) {
+		auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
+		Cursor->SetWorldLocationAndRotation(result.Location, a);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("asdf"), 0);
+	}
 }
 
 // Called to bind functionality to input

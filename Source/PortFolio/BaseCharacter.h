@@ -29,7 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 	UGASAttributeSet* Attributes;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UDecalComponent* Cursor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
