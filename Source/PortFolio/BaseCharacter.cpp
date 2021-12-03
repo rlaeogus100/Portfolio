@@ -10,6 +10,7 @@
 #include "GASComponent.h"
 #include "GASGameplayAbility.h"
 #include "kismet/KismetMathLibrary.h"
+#include "CPP_CharacterController.h"
 
 #include "Net/UnrealNetwork.h"
 
@@ -28,14 +29,12 @@ ABaseCharacter::ABaseCharacter()
 	ConstructorHelpers::FObjectFinder<UMaterialInterface>MI_Cursor(TEXT("Material'/Game/BluePrint/Character/M_Cursor_Decal.M_Cursor_Decal'"));
 	if(MI_Cursor.Succeeded()) 
 	{
-		
 		Cursor->SetupAttachment(RootComponent);
 		Cursor->SetDecalMaterial(MI_Cursor.Object);
 		Cursor->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 		Cursor->SetWorldLocation(FVector(-10, 0, -90));
 		Cursor->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
 	}
-	
 }
 
 
@@ -59,16 +58,13 @@ void ABaseCharacter::Tick(float DeltaTime)
 		auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
 		Cursor->SetWorldLocationAndRotation(result.Location, a);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("asdf"), 0);
-	}
 }
 
 // Called to bind functionality to input
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 
 	if (AbilitySystemComp && InputComponent)
 	{
