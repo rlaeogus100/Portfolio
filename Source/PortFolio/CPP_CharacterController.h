@@ -9,6 +9,8 @@
 /**
  * 
  */
+class UCPP_InventoryUW;
+
 UCLASS()
 class PORTFOLIO_API ACPP_CharacterController : public APlayerController
 {
@@ -18,21 +20,39 @@ class PORTFOLIO_API ACPP_CharacterController : public APlayerController
 
 public:
 	UPROPERTY(EditAnywhere, Blueprintreadonly)
-		float MinDinstanceClick = 120.0f;
+		float MinClickDinstance = 120.0f;
 	
 	bool bSetDestination = false;
+
+	bool bInventory = false;
+
+	UCPP_InventoryUW* Inventory;
+
+	
 
 public:
 	ACPP_CharacterController();
 	
 
-
+	// 마우스 커서로 캐릭터를 이동하는 함수
 	UFUNCTION()
 		void MoveToHitLocation(FHitResult Hit);
 
+	virtual void SetupInputComponent();
+
 	virtual void Tick(float DeltaSeconds);
 
+	// 우클릭 버튼 누르면 그 위치로 이동
 	void OnSetDestination_Pressed();
 	void OnSetDestination_Released();
 
+	// I키를 누르면 인벤토리를 보여주거나 사라지게 함
+	void OnInventory_Pressed();
+	
+	void InvisibleInventory();
+
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory", Meta = (AllowPrivateAccess = true))
+		TSubclassOf<UCPP_InventoryUW> Inventory_Widget;
 };

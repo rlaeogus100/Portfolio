@@ -13,6 +13,7 @@
 #include "CPP_CharacterController.h"
 
 #include "Net/UnrealNetwork.h"
+#include "UObject/ConstructorHelpers.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()

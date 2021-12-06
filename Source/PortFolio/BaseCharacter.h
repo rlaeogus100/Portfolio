@@ -26,6 +26,7 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 	UGASAttributeSet* Attributes;
 

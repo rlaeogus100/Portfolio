@@ -3,10 +3,13 @@
 
 #include "CPP_MainGM.h"
 #include "BaseCharacter.h"
+#include "CPP_CharacterController.h"
+#include "UObject/ConstructorHelpers.h"
 
 ACPP_MainGM::ACPP_MainGM() {
 	
 	DefaultPawnClass = ConstructorHelpers::FClassFinder<ABaseCharacter>(TEXT("Blueprint'/Game/BluePrint/Character/BP_Character.BP_Character_C'")).Class;
-
+	
+	PlayerControllerClass = ACPP_CharacterController::StaticClass();
 
 }
