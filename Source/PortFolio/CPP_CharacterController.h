@@ -10,6 +10,7 @@
  * 
  */
 class UCPP_InventoryUW;
+class ABaseCharacter;
 
 UCLASS()
 class PORTFOLIO_API ACPP_CharacterController : public APlayerController
@@ -28,6 +29,7 @@ public:
 
 	UCPP_InventoryUW* Inventory;
 
+	ABaseCharacter* character;
 	
 
 public:
@@ -42,6 +44,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds);
 
+	virtual void BeginPlay() override;
+
 	// 우클릭 버튼 누르면 그 위치로 이동
 	void OnSetDestination_Pressed();
 	void OnSetDestination_Released();
@@ -50,6 +54,7 @@ public:
 	void OnInventory_Pressed();
 	
 	void InvisibleInventory();
+
 
 
 private:

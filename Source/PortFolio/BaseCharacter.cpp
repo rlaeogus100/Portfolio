@@ -18,7 +18,7 @@
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
@@ -28,14 +28,17 @@ ABaseCharacter::ABaseCharacter()
 	Cursor = CreateDefaultSubobject<UDecalComponent>(TEXT("Cursor"));
 
 	ConstructorHelpers::FObjectFinder<UMaterialInterface>MI_Cursor(TEXT("Material'/Game/BluePrint/Character/M_Cursor_Decal.M_Cursor_Decal'"));
-	if(MI_Cursor.Succeeded()) 
+	if (MI_Cursor.Succeeded())
 	{
 		Cursor->SetupAttachment(RootComponent);
 		Cursor->SetDecalMaterial(MI_Cursor.Object);
 		Cursor->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 		Cursor->SetWorldLocation(FVector(-10, 0, -90));
 		Cursor->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
+		
 	}
+
+
 }
 
 
@@ -44,20 +47,22 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	controller = Cast<ACPP_CharacterController>((UGameplayStatics::GetPlayerController(GetWorld(), 0)));
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	// 마우스 커서 위치로 데칼 옮기기
-	FHitResult result;
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
-	if (result.bBlockingHit) {
-		auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
-		Cursor->SetWorldLocationAndRotation(result.Location, a);
+
+	if (!controller->bInventory) {
+		// 마우스 커서 위치로 데칼 옮기기
+		FHitResult result;
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
+		if (result.bBlockingHit) {
+			auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
+			Cursor->SetWorldLocationAndRotation(result.Location, a);
+		}
 	}
 }
 
@@ -116,7 +121,7 @@ void ABaseCharacter::GiveAbilities()
 		{
 			AbilitySystemComp->GiveAbility(
 				FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
-			
+
 		}
 	}
 }
@@ -143,5 +148,10 @@ void ABaseCharacter::OnRep_PlayerState()
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
 		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
 	}
+}
+
+void ABaseCharacter::cursorVisible(bool value)
+{
+	Cursor->SetVisibleFlag(value);
 }
 

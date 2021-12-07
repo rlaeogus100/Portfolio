@@ -3,18 +3,21 @@
 
 #include "CPP_CharacterController.h"
 #include "Inventory/CPP_InventoryUW.h"
+#include "BaseCharacter.h"
 
 #include "kismet/KismetMathLibrary.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "kismet/GameplayStatics.h"
+
+// 마우스 커서 숨기기 위해 임포트
+#include "Components/DecalComponent.h"
 
 
 ACPP_CharacterController::ACPP_CharacterController()
 {
 	// 틱 활성화
 	PrimaryActorTick.bCanEverTick = true;
-
-	
 
 }
 
@@ -53,6 +56,12 @@ void ACPP_CharacterController::Tick(float DeltaSeconds)
 	}
 }
 
+void ACPP_CharacterController::BeginPlay()
+{
+	Super::BeginPlay();
+	character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+}
+
 void ACPP_CharacterController::OnSetDestination_Pressed()
 {
 	// 우클릭을 누르고 있음.
@@ -67,9 +76,9 @@ void ACPP_CharacterController::OnSetDestination_Released()
 
 void ACPP_CharacterController::OnInventory_Pressed()
 {
-	if (bInventory) 
+	if (bInventory)
 	{
-		if (Inventory!=nullptr) 
+		if (Inventory != nullptr)
 		{
 			Inventory->InvisibleSelf();
 		}
@@ -82,8 +91,13 @@ void ACPP_CharacterController::OnInventory_Pressed()
 			if (Inventory != nullptr)
 			{
 				Inventory->AddToViewport();
-				UWidgetBlueprintLibrary::SetInputMode_UIOnly(this);
+				UWidgetBlueprintLibrary::SetInputMode_GameAndUI(this);
 				bShowMouseCursor = true;
+
+				if (character != nullptr) {
+					character->cursorVisible(false);
+					UE_LOG(LogTemp, Log, TEXT("Null"), 0);
+				}
 				bInventory = true;
 			}
 		}
@@ -95,6 +109,12 @@ void ACPP_CharacterController::InvisibleInventory()
 {
 	bShowMouseCursor = false;
 	UWidgetBlueprintLibrary::SetInputMode_GameOnly(this);
+	if (character != nullptr) {
+		character->cursorVisible(true);
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("Nusadfll"), 0);
+	}
 	bInventory = false;
 
 }

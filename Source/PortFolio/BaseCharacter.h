@@ -13,6 +13,7 @@
 
 class UDecalComponent;
 class UCPP_GameplayEffect;
+class ACPP_CharacterController;
 
 UCLASS()
 class PORTFOLIO_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -25,6 +26,9 @@ class PORTFOLIO_API ABaseCharacter : public ACharacter, public IAbilitySystemInt
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
+
+	// 컨트롤러
+	ACPP_CharacterController* controller;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
@@ -65,5 +69,7 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+
+	void cursorVisible(bool value);
 
 };
