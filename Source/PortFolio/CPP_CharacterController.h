@@ -55,8 +55,11 @@ public:
 	
 	void InvisibleInventory();
 
+	UFUNCTION(BlueprintCallable)
+		void ChangeItem();
 
-
+	UFUNCTION(BlueprintCallable)
+		void ChangeEquip();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory", Meta = (AllowPrivateAccess = true))
 		TSubclassOf<UCPP_InventoryUW> Inventory_Widget;

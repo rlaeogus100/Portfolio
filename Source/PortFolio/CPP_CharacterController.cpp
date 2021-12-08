@@ -90,6 +90,7 @@ void ACPP_CharacterController::OnInventory_Pressed()
 			Inventory = CreateWidget< UCPP_InventoryUW>(this, Inventory_Widget);
 			if (Inventory != nullptr)
 			{
+				Inventory->SpawnInventory();
 				Inventory->AddToViewport();
 				UWidgetBlueprintLibrary::SetInputMode_GameAndUI(this);
 				bShowMouseCursor = true;
@@ -117,5 +118,21 @@ void ACPP_CharacterController::InvisibleInventory()
 	}
 	bInventory = false;
 
+}
+
+void ACPP_CharacterController::ChangeItem()
+{
+	if (Inventory != nullptr)
+	{
+		Inventory->ChangeItem();
+	}
+}
+
+void ACPP_CharacterController::ChangeEquip()
+{
+	if (Inventory != nullptr)
+	{
+		Inventory->ChangeEquip();
+	}
 }
 
