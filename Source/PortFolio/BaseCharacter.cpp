@@ -3,6 +3,7 @@
 
 #include "BaseCharacter.h"
 #include "Components/DecalComponent.h"
+
 #include "Materials/MaterialInterface.h"
 #include "kismet/GameplayStatics.h"
 #include "CPP_GameplayEffect.h"
@@ -11,6 +12,9 @@
 #include "GASGameplayAbility.h"
 #include "kismet/KismetMathLibrary.h"
 #include "CPP_CharacterController.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 
 #include "Net/UnrealNetwork.h"
 #include "UObject/ConstructorHelpers.h"
@@ -26,6 +30,18 @@ ABaseCharacter::ABaseCharacter()
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
 	Cursor = CreateDefaultSubobject<UDecalComponent>(TEXT("Cursor"));
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+
+
+	SpringArm->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(SpringArm);
+
+	SpringArm->TargetArmLength = 1200;
+	SpringArm->SetWorldRotation(FRotator(-60.0f, 0.0f, 0.0f));
+	SpringArm->SetUsingAbsoluteRotation(true);
+	SpringArm->bDoCollisionTest = false;
 
 	ConstructorHelpers::FObjectFinder<UMaterialInterface>MI_Cursor(TEXT("Material'/Game/BluePrint/Character/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (MI_Cursor.Succeeded())

@@ -92,6 +92,7 @@ void ACPP_CharacterController::OnInventory_Pressed()
 			{
 				Inventory->SpawnInventory();
 				Inventory->AddToViewport();
+				Inventory->SetFocus();
 				UWidgetBlueprintLibrary::SetInputMode_GameAndUI(this);
 				bShowMouseCursor = true;
 
@@ -133,6 +134,14 @@ void ACPP_CharacterController::ChangeEquip()
 	if (Inventory != nullptr)
 	{
 		Inventory->ChangeEquip();
+	}
+}
+
+void ACPP_CharacterController::InventoryDropMenuClose()
+{
+	if (Inventory != nullptr)
+	{
+		Inventory->CloseDropMenu();
 	}
 }
 

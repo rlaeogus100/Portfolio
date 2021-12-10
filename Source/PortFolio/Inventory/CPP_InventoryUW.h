@@ -16,15 +16,19 @@ class PORTFOLIO_API UCPP_InventoryUW : public UUserWidget
 
 
 public:
-	int a;
+
+	UFUNCTION(BlueprintCallable)
 	void InvisibleSelf();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SpawnInventory();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void ChangeItem();
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void ChangeEquip();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void CloseDropMenu();
 };

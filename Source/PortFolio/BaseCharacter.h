@@ -14,6 +14,8 @@
 class UDecalComponent;
 class UCPP_GameplayEffect;
 class ACPP_CharacterController;
+class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class PORTFOLIO_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -45,6 +47,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Effects")
 		TArray<TSubclassOf<class UGASGameplayAbility>> DefaultAbilities;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCameraComponent* Camera;
 
 protected:
 

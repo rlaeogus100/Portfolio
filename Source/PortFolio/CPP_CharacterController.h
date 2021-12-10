@@ -60,6 +60,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void ChangeEquip();
+
+	UFUNCTION(BlueprintCallable)
+		void InventoryDropMenuClose();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory", Meta = (AllowPrivateAccess = true))
 		TSubclassOf<UCPP_InventoryUW> Inventory_Widget;
