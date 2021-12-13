@@ -79,6 +79,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 			auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
 			Cursor->SetWorldLocationAndRotation(result.Location, a);
 		}
+
 	}
 }
 
