@@ -10,6 +10,6 @@ ACPP_MainGM::ACPP_MainGM() {
 	
 	DefaultPawnClass = ConstructorHelpers::FClassFinder<ABaseCharacter>(TEXT("Blueprint'/Game/BluePrint/Character/BP_Character.BP_Character_C'")).Class;
 	
-	PlayerControllerClass = ACPP_CharacterController::StaticClass();
+	PlayerControllerClass = ConstructorHelpers::FClassFinder<ACPP_CharacterController>(TEXT("Blueprint'/Game/BluePrint/Character/PlayerController.PlayerController_C'")).Class;
 
 }
