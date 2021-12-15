@@ -13,7 +13,8 @@
 				"GameplayAbilities",
 				"UMGEditor",
 				"UnrealEd",
-				"UMG"
+				"UMG",
+				"AIModule"
 			]
 		}
 	],
