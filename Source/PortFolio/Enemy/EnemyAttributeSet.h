@@ -14,13 +14,13 @@
  	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
  	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 /**
- * 
+ *
  */
 UCLASS()
 class PORTFOLIO_API UEnemyAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-	
+
 
 public:
 	int a;
@@ -44,5 +44,23 @@ public:
 		UFUNCTION()
 		virtual void OnRep_AttackPower(const FGameplayAttributeData& OldAttackPower);
 
+	// 근접 방어력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MeleeDefence)
+		FGameplayAttributeData MeleeDefence;
+	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MeleeDefence)
+
+		UFUNCTION()
+		virtual void OnRep_MeleeDefence(const FGameplayAttributeData& OldMeleeDefence);
+
+	// 마법 방어력 추가
+		// 근접 방어력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MagicDefence)
+		FGameplayAttributeData MagicDefence;
+	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MagicDefence)
+
+		UFUNCTION()
+		virtual void OnRep_MagicDefence(const FGameplayAttributeData& OldMagicDefence);
+
+		virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data);
 
 };

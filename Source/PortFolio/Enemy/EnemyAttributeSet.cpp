@@ -26,3 +26,21 @@ void UEnemyAttributeSet::OnRep_AttackPower(const FGameplayAttributeData& OldAtta
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UEnemyAttributeSet, AttackPower, OldAttackPower)
 }
+
+void UEnemyAttributeSet::OnRep_MeleeDefence(const FGameplayAttributeData& OldMeleeDefence)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UEnemyAttributeSet, MeleeDefence, OldMeleeDefence)
+}
+
+void UEnemyAttributeSet::OnRep_MagicDefence(const FGameplayAttributeData& OldMagicDefence)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UEnemyAttributeSet, MeleeDefence, OldMagicDefence)
+}
+
+void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	if (Health.GetBaseValue() <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("death"), 0);
+	}
+}
