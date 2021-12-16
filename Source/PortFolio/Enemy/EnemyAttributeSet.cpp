@@ -16,6 +16,8 @@ void UEnemyAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UEnemyAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UEnemyAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UEnemyAttributeSet, MeleeDefence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UEnemyAttributeSet, MagicDefence, COND_None, REPNOTIFY_Always);
 }
 
 void UEnemyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
