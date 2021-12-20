@@ -54,7 +54,6 @@ ABaseCharacter::ABaseCharacter()
 		
 	}
 
-
 }
 
 
@@ -108,6 +107,8 @@ void ABaseCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGe
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
 	}
 }
+
+
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 {

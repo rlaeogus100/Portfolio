@@ -7,7 +7,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "EnemyAttributeSet.h"
+#include "../GASAttributeSet.h"
 
 
 #include "EnemyBase.generated.h"
@@ -26,7 +26,7 @@ public:
 	AEnemyBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-		UEnemyAttributeSet* Attributes;
+		UGASAttributeSet* Attributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 		class UAbilitySystemComponent* AbilitySystemComp;
@@ -61,4 +61,6 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Attribute")
+	float GetHealth();
 };

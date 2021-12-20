@@ -13,7 +13,7 @@ AEnemyBase::AEnemyBase()
 
 	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
 
-	Attributes = CreateDefaultSubobject<UEnemyAttributeSet>(TEXT("Attributes"));
+	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 }
 
 // Called when the game starts or when spawned
@@ -110,5 +110,13 @@ void AEnemyBase::OnRep_PlayerState()
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
 		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
 	}
+}
+
+float AEnemyBase::GetHealth()
+{
+	if (!Attributes)
+		return 1.f;
+
+	return Attributes->GetHealth();
 }
 

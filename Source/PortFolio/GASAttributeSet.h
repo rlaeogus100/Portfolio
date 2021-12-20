@@ -27,8 +27,11 @@ public:
 	int a;
 	UGASAttributeSet();
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
-
+	
+	void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
 	// 체력 추가
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Health)
 		FGameplayAttributeData Health;
@@ -36,6 +39,14 @@ public:
 
 		UFUNCTION()
 		virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
+
+	// 최대 체력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MaxHealth)
+		FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxHealth)
+
+		UFUNCTION()
+		virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 
 	// 기력 추가
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Stamina)
@@ -45,13 +56,37 @@ public:
 		UFUNCTION()
 		virtual void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
 
-	// 공격력 추가
-	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_AttackPower)
+	// 물리 공격력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Damage", ReplicatedUsing = OnRep_AttackPower)
 		FGameplayAttributeData AttackPower;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, AttackPower)
 
 		UFUNCTION()
 		virtual void OnRep_AttackPower(const FGameplayAttributeData& OldAttackPower);
+
+	// 마법 공격력 추가.
+	UPROPERTY(BlueprintReadOnly, Category = "Damage", ReplicatedUsing = OnRep_AttackMagic)
+		FGameplayAttributeData AttackMagic;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, AttackMagic)
+
+		UFUNCTION()
+		virtual void OnRep_AttackMagic(const FGameplayAttributeData& OldValue);
+
+	// 물리 방어력 추가.
+	UPROPERTY(BlueprintReadOnly, Category = "Damage", ReplicatedUsing = OnRep_MeleeDefence)
+		FGameplayAttributeData MeleeDefence;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MeleeDefence)
+
+		UFUNCTION()
+		virtual void OnRep_MeleeDefence(const FGameplayAttributeData& OldValue);
+
+	// 마법 방어력 추가.
+	UPROPERTY(BlueprintReadOnly, Category = "Damage", ReplicatedUsing = OnRep_MagicDefence)
+		FGameplayAttributeData MagicDefence;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MagicDefence)
+
+		UFUNCTION()
+		virtual void OnRep_MagicDefence(const FGameplayAttributeData& OldValue);
 
 
 };

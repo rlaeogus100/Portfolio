@@ -54,9 +54,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* Camera;
 
+
 protected:
 
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:
@@ -68,6 +69,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "BaseCharacter")
 		void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel);
+
+
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 
