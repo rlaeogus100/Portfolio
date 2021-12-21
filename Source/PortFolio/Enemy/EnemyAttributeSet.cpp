@@ -43,6 +43,6 @@ void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 {
 	if (Health.GetBaseValue() <= 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("death"), 0);
+		UE_LOG(LogTemp, Error, TEXT("deaasdfth"), 0);
 	}
 }

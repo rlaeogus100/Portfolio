@@ -88,5 +88,10 @@ public:
 		UFUNCTION()
 		virtual void OnRep_MagicDefence(const FGameplayAttributeData& OldValue);
 
+	// 데미지 추가. (적을 타격했을 때 데미지 계산기를 이용해 나온 결과를 돌려 보내기 위한 변수. 이를 이용해 데미지를 팝업하는 등의 작업이 가능할 것으로 기대됨)
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+		FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Damage)
+
 
 };

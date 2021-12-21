@@ -46,13 +46,15 @@ void AEnemyBase::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, i
 {
 	if (AbilitySystemComp)
 	{
-		if (HasAuthority() && AbilityToGet)
+		if (AbilityToGet)
 		{
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
 		}
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
 	}
 }
+
+
 
 UAbilitySystemComponent* AEnemyBase::GetAbilitySystemComponent() const
 {
@@ -67,17 +69,18 @@ void AEnemyBase::InitializeAttributes()
 		EffectContext.AddSourceObject(this);
 
 		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComp->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
-
+		UE_LOG( LogTemp, Error, TEXT("asdf"), 0);
 		if (SpecHandle.IsValid())
 		{
 			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			UE_LOG(LogTemp, Error, TEXT("qwer"), 0);
 		}
 	}
 }
 
 void AEnemyBase::GiveAbilities()
 {
-	if (HasAuthority() && AbilitySystemComp)
+	if (AbilitySystemComp)
 	{
 		for (auto StartupAbility : DefaultAbilities)
 		{
@@ -115,7 +118,7 @@ void AEnemyBase::OnRep_PlayerState()
 float AEnemyBase::GetHealth()
 {
 	if (!Attributes)
-		return 1.f;
+		return -1.f;
 
 	return Attributes->GetHealth();
 }
