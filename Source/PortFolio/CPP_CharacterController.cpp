@@ -59,6 +59,7 @@ void ACPP_CharacterController::Tick(float DeltaSeconds)
 void ACPP_CharacterController::BeginPlay()
 {
 	Super::BeginPlay();
+		bShowMouseCursor = true;
 	character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
@@ -93,11 +94,10 @@ void ACPP_CharacterController::OnInventory_Pressed()
 				Inventory->SpawnInventory();
 				Inventory->AddToViewport();
 				Inventory->SetFocus();
-				UWidgetBlueprintLibrary::SetInputMode_GameAndUI(this);
-				bShowMouseCursor = true;
+
 
 				if (character != nullptr) {
-					character->cursorVisible(false);
+					//character->cursorVisible(false);
 					UE_LOG(LogTemp, Log, TEXT("Null"), 0);
 				}
 				bInventory = true;
@@ -109,10 +109,8 @@ void ACPP_CharacterController::OnInventory_Pressed()
 
 void ACPP_CharacterController::InvisibleInventory()
 {
-	bShowMouseCursor = false;
-	UWidgetBlueprintLibrary::SetInputMode_GameOnly(this);
 	if (character != nullptr) {
-		character->cursorVisible(true);
+		//character->cursorVisible(true);
 	}
 	else {
 		UE_LOG(LogTemp, Log, TEXT("Nusadfll"), 0);

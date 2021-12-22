@@ -14,7 +14,7 @@ struct DamageCalcStruct {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MeleeDefence);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackMagic);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicDefence);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Health);
 
 	DamageCalcStruct()
 	{
@@ -23,12 +23,13 @@ struct DamageCalcStruct {
 			// 타격당했을 때의 방어력으로 계산해야 하기 때문에 스냅샷은 하지 않음.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, MeleeDefence, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, MagicDefence, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, Health, Target, false);
 
 		// 공격했을 때 투사체일 수 있기 때문에 공격력은 스냅샷을 함.
 		// 별개로 지금 만드는 프로젝트에서는 혹시 버프가 존재한다면 공격 중에 버프가 끝났을 시 공격을 시작했던 값 그대로 사용하고자 사격용 계산기를 따로 만들지 않아서 근접공격 또한 스냅샷을 함.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, AttackPower, Source, true);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, AttackMagic, Source, true);
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, Damage, Source, true);
+
 
 	}
 
@@ -46,11 +47,12 @@ UDamageExcutionCalculation::UDamageExcutionCalculation()
 	RelevantAttributesToCapture.Add(DamageStatic().MagicDefenceDef);
 	RelevantAttributesToCapture.Add(DamageStatic().AttackPowerDef);
 	RelevantAttributesToCapture.Add(DamageStatic().AttackMagicDef);
-	RelevantAttributesToCapture.Add(DamageStatic().DamageDef);
+	RelevantAttributesToCapture.Add(DamageStatic().HealthDef);
 }
 
 void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, OUT FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
+
 	// 타겟 (공격 당한 액터)의 어빌리티시스템 컴포넌트를 가져옴
 	UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
 	// 소스 (공격을 한 주체)의 어빌리티시스템 컴포넌트를 가져옴 
@@ -82,18 +84,22 @@ void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCus
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().MeleeDefenceDef, EvaluationParameters, MeleeDefence);
 
 	float MagicDefence = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().MeleeDefenceDef, EvaluationParameters, MeleeDefence);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().MeleeDefenceDef, EvaluationParameters, MagicDefence);
 
 	float AttackPower = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackPowerDef, EvaluationParameters, MeleeDefence);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackPowerDef, EvaluationParameters, AttackPower);
 
 	float AttackMagic = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackMagicDef, EvaluationParameters, MeleeDefence);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackMagicDef, EvaluationParameters, AttackMagic);
 
 	float DamageDone = 0.f;
+
 	if (AttackPower >= AttackMagic) 
 	{
+
 		DamageDone = AttackPower - MeleeDefence;
+		UE_LOG(LogTemp, Error, TEXT("AttackPower%.f"), AttackPower);
+		UE_LOG(LogTemp, Error, TEXT("MeleeDefence%.f"), MeleeDefence);
 	}
 	else 
 	{
@@ -101,9 +107,9 @@ void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCus
 	}
 	if (DamageDone > 0.f)
 	{
-
 		UE_LOG(LogTemp, Error, TEXT("%.f"), DamageDone);
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatic().DamageProperty, EGameplayModOp::Additive, DamageDone));
+		// 데미지를 HP에 Add함 Property는 직접적인 대상의 주소값을 지칭함.
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatic().HealthProperty, EGameplayModOp::Additive, -DamageDone));
 	}
 
 }

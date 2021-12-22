@@ -30,17 +30,6 @@ void AEnemyBase::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (AbilitySystemComp && InputComponent)
-	{
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
-		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}
-}
 
 void AEnemyBase::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel)
 {
@@ -73,7 +62,6 @@ void AEnemyBase::InitializeAttributes()
 		if (SpecHandle.IsValid())
 		{
 			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-			UE_LOG(LogTemp, Error, TEXT("qwer"), 0);
 		}
 	}
 }
@@ -82,8 +70,9 @@ void AEnemyBase::GiveAbilities()
 {
 	if (AbilitySystemComp)
 	{
-		for (auto StartupAbility : DefaultAbilities)
+		for (TSubclassOf<UEnemyGameplayAbility>& StartupAbility : DefaultAbilities)
 		{
+			
 			AbilitySystemComp->GiveAbility(
 				FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
 
@@ -101,19 +90,7 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	GiveAbilities();
 }
 
-void AEnemyBase::OnRep_PlayerState()
-{
-	Super::OnRep_PlayerState();
 
-	AbilitySystemComp->InitAbilityActorInfo(this, this);
-	InitializeAttributes();
-
-	if (AbilitySystemComp && InputComponent)
-	{
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
-		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}
-}
 
 float AEnemyBase::GetHealth()
 {

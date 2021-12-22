@@ -69,16 +69,17 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (IsLocallyControlled()) {
+		//if (!controller->bInventory) {
+		//	// 마우스 커서 위치로 데칼 옮기기
+		//	FHitResult result;
+		//	UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
+		//	if (result.bBlockingHit) {
+		//		auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
+		//		Cursor->SetWorldLocationAndRotation(result.Location, a);
+		//	}
 
-	if (!controller->bInventory) {
-		// 마우스 커서 위치로 데칼 옮기기
-		FHitResult result;
-		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, result);
-		if (result.bBlockingHit) {
-			auto a = UKismetMathLibrary::MakeRotationFromAxes(result.ImpactNormal, FVector(0.f, 0.f, 0.f), FVector(0.f, 0.f, 0.f));
-			Cursor->SetWorldLocationAndRotation(result.Location, a);
-		}
-
+		//}
 	}
 }
 
@@ -98,9 +99,9 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ABaseCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel)
 {
-	if (AbilitySystemComp)
+	if (HasAuthority() && AbilitySystemComp)
 	{
-		if (HasAuthority() && AbilityToGet)
+		if (AbilityToGet)
 		{
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
 		}

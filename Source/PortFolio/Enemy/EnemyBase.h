@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
+#include "Abilities/GameplayAbility.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "../GASAttributeSet.h"
@@ -25,7 +25,7 @@ public:
 	// Sets default values for this character's properties
 	AEnemyBase();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Abilities")
 		UGASAttributeSet* Attributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
@@ -47,7 +47,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = "BaseEnemy")
 		void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel);
@@ -59,7 +59,7 @@ public:
 	virtual void GiveAbilities();
 
 	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_PlayerState() override;
+	//virtual void OnRep_PlayerState() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
 	float GetHealth();
