@@ -35,7 +35,7 @@ public:
 		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Effects")
-		TArray<TSubclassOf<class UEnemyGameplayAbility>> DefaultAbilities;
+		TArray<TSubclassOf<class UGameplayAbility>> DefaultAbilities;
 
 
 protected:

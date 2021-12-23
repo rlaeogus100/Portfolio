@@ -70,11 +70,11 @@ void AEnemyBase::GiveAbilities()
 {
 	if (AbilitySystemComp)
 	{
-		for (TSubclassOf<UEnemyGameplayAbility>& StartupAbility : DefaultAbilities)
+		for (auto StartupAbility : DefaultAbilities)
 		{
 			
 			AbilitySystemComp->GiveAbility(
-				FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+				FGameplayAbilitySpec(StartupAbility, 1));
 
 		}
 	}

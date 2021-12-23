@@ -51,7 +51,7 @@ ABaseCharacter::ABaseCharacter()
 		Cursor->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 		Cursor->SetWorldLocation(FVector(-10, 0, -90));
 		Cursor->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
-		
+
 	}
 
 }
@@ -134,7 +134,7 @@ void ABaseCharacter::InitializeAttributes()
 
 void ABaseCharacter::GiveAbilities()
 {
-	if (HasAuthority() && AbilitySystemComp)
+	if (HasAuthority() && AbilitySystemComp && DefaultAbilities.Num() > 0)
 	{
 		for (TSubclassOf<UGASGameplayAbility>& StartupAbility : DefaultAbilities)
 		{
