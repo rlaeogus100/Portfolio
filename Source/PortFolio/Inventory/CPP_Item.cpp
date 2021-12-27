@@ -47,12 +47,14 @@ void ACPP_Item::Tick(float DeltaTime)
 void ACPP_Item::NameWidgetRotationUpdate()
 {
 	ACharacter* character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	ABaseCharacter* base = Cast<ABaseCharacter>(character);
-	//USceneComponent* CamTran = base->Camera->GetTransformComponent();
-	FRotator CamRot = base->Camera->GetComponentRotation();
-	FRotator TempRot = FRotator(CamRot.Pitch * -1.f, CamRot.Yaw, CamRot.Roll);
-	FRotator Rot = UKismetMathLibrary::ComposeRotators(TempRot, FRotator(-180, 0, -180));
-	ItemNameBar->SetWorldRotation(Rot);
+	if (character != nullptr) {
+		ABaseCharacter* base = Cast<ABaseCharacter>(character);
+		//USceneComponent* CamTran = base->Camera->GetTransformComponent();
+		FRotator CamRot = base->Camera->GetComponentRotation();
+		FRotator TempRot = FRotator(CamRot.Pitch * -1.f, CamRot.Yaw, CamRot.Roll);
+		FRotator Rot = UKismetMathLibrary::ComposeRotators(TempRot, FRotator(-180, 0, -180));
+		ItemNameBar->SetWorldRotation(Rot);
+	}
 
 }
 
