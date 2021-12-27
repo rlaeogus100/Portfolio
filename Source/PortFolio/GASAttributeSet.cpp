@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
+#include "Enemy/EnemyBase.h"
 
 UGASAttributeSet::UGASAttributeSet()
 {
@@ -17,6 +18,7 @@ void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	Super::PreAttributeChange(Attribute, NewValue);
 	if (Attribute == GetMaxHealthAttribute())
 	{
+
 		UE_LOG(LogTemp, Error, TEXT("%f asdf"), NewValue);
 		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
 	}
@@ -48,11 +50,21 @@ void UGASAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 void UGASAttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty)
 {
 	UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponent();
-	if (AbilityComp) {
-		UE_LOG(LogTemp, Error, TEXT("GASAttributeSet"), 0);
+	if (GetOwningActor()) {
+		UE_LOG(LogTemp, Error, TEXT("GetOwningActor Is True : %s"), *GetOwningActor()->GetName());
 	}
+	if (AbilityComp == nullptr) {
+		if (Cast<AEnemyBase>(GetOwningActor()))
+			if (Cast<AEnemyBase>(GetOwningActor())->AbilitySystemComp) {
+				UE_LOG(LogTemp, Error, TEXT("AbilityComponent Is True"), 0);
+				AbilityComp = Cast<AEnemyBase>(GetOwningActor())->AbilitySystemComp;
+			}
+	}
+
 	const float CurrentMaxValue = MaxAttribute.GetCurrentValue();
-	UE_LOG(LogTemp, Error, TEXT("%.f GASAttributeSet"), CurrentMaxValue);
+	UE_LOG(LogTemp, Error, TEXT("%.f AffectedAttribute"), AffectedAttribute.GetCurrentValue());
+	UE_LOG(LogTemp, Error, TEXT("%.f MaxAttribute"), CurrentMaxValue);
+	UE_LOG(LogTemp, Error, TEXT("%.f NewMaxValue"), NewMaxValue);
 	if (!FMath::IsNearlyEqual(CurrentMaxValue, NewMaxValue) && AbilityComp)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%.f GASAttributeSet"), NewMaxValue);

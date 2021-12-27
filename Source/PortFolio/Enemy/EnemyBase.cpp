@@ -12,6 +12,7 @@ AEnemyBase::AEnemyBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	AbilitySystemComp->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 }
@@ -61,6 +62,7 @@ void AEnemyBase::InitializeAttributes()
 		UE_LOG( LogTemp, Error, TEXT("asdf"), 0);
 		if (SpecHandle.IsValid())
 		{
+			UE_LOG(LogTemp, Error, TEXT("IsValid()"), 0);
 			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 		}
 	}
@@ -68,14 +70,13 @@ void AEnemyBase::InitializeAttributes()
 
 void AEnemyBase::GiveAbilities()
 {
-	if (AbilitySystemComp)
+	if (HasAuthority() && AbilitySystemComp)
 	{
 		for (auto StartupAbility : DefaultAbilities)
 		{
-			
+			UE_LOG(LogTemp, Error, TEXT("GiveAbilitiesEnemy"), 0);
 			AbilitySystemComp->GiveAbility(
 				FGameplayAbilitySpec(StartupAbility, 1));
-
 		}
 	}
 }
@@ -85,7 +86,10 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	AbilitySystemComp->InitAbilityActorInfo(this, this);
-
+	UE_LOG(LogTemp, Error, TEXT("PossessedBy"), 0);
+	if (AbilitySystemComp == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("Abilitysystem is Null"), 0);
+	}
 	InitializeAttributes();
 	GiveAbilities();
 }
@@ -98,5 +102,14 @@ float AEnemyBase::GetHealth()
 		return -1.f;
 
 	return Attributes->GetHealth();
+}
+
+float AEnemyBase::GetAttackPower()
+{
+
+	if (!Attributes)
+		return -1.f;
+
+	return Attributes->GetAttackPower();
 }
 

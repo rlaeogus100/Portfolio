@@ -17,7 +17,7 @@
 class UCPP_GameplayEffect;
 
 UCLASS()
-class PORTFOLIO_API AEnemyBase : public ACharacter
+class PORTFOLIO_API AEnemyBase : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,7 @@ public:
 		UGASAttributeSet* Attributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-		class UAbilitySystemComponent* AbilitySystemComp;
+		UAbilitySystemComponent* AbilitySystemComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
@@ -42,7 +42,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -62,5 +62,8 @@ public:
 	//virtual void OnRep_PlayerState() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
-	float GetHealth();
+		float GetHealth();
+
+	UFUNCTION(BlueprintCallable, Category = "Attribute")
+		float GetAttackPower();
 };

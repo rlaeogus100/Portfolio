@@ -61,7 +61,15 @@ void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCus
 	// 어빌리티시스템 컴포넌트를 제대로 가져왔다면 avatarActor(능력을 사용하는 폰)을 아니라면 nullptr을 지닌다.
 	AActor* SourceActor = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor_Direct() : nullptr;
 	AActor* TargetActor = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor_Direct() : nullptr;
-
+	if (SourceAbilitySystemComponent == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("SourceAbilitySystemComponent Null"), 0);
+	}
+	if (SourceActor == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("SourceActor Null"), 0);
+	}
+	if (TargetActor == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("TargetActor Null"), 0);
+	}
 	// 게임플레이이펙트, 이펙트의 핸들 등을 지니고 있음. 사양이라는 spec에 맞게 태그 등 게임플레이 이펙트에 관련된 정보들을 지니고 있음.
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 

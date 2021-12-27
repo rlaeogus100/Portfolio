@@ -26,6 +26,8 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	AbilitySystemComp->SetIsReplicated(true);
+
 
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
@@ -91,6 +93,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	if (AbilitySystemComp && InputComponent)
 	{
+
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
 		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
 	}
@@ -101,8 +104,10 @@ void ABaseCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGe
 {
 	if (HasAuthority() && AbilitySystemComp)
 	{
+
 		if (AbilityToGet)
 		{
+			UE_LOG(LogTemp, Error, TEXT("inteializeability"), 0);
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
 		}
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
