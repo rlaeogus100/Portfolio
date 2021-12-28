@@ -10,7 +10,7 @@
  * 
  */
 class UCPP_InventoryUW;
-class ABaseCharacter;
+
 
 UCLASS()
 class PORTFOLIO_API ACPP_CharacterController : public APlayerController
@@ -29,7 +29,7 @@ public:
 
 	UCPP_InventoryUW* Inventory;
 
-	ABaseCharacter* character;
+	class ACharacterBase* character;
 	
 
 public:

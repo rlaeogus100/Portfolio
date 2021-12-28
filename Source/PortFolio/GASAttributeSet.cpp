@@ -6,7 +6,7 @@
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "Shared/SharedCharacter.h"
-#include "Enemy/EnemyBase.h"
+
 
 
 UGASAttributeSet::UGASAttributeSet()

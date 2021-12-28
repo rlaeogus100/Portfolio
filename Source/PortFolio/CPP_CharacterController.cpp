@@ -3,7 +3,7 @@
 
 #include "CPP_CharacterController.h"
 #include "Inventory/CPP_InventoryUW.h"
-#include "BaseCharacter.h"
+#include "CharacterBase.h"
 
 #include "kismet/KismetMathLibrary.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -60,7 +60,7 @@ void ACPP_CharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 		bShowMouseCursor = true;
-	character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	character = Cast<ACharacterBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void ACPP_CharacterController::OnSetDestination_Pressed()
