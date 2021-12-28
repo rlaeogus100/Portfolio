@@ -96,6 +96,8 @@ void AEnemyBase::PossessedBy(AController* NewController)
 
 
 
+
+
 float AEnemyBase::GetHealth()
 {
 	if (!Attributes)

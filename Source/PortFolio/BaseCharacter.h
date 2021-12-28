@@ -8,7 +8,10 @@
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
 #include "GASAttributeSet.h"
+#include "Shared/SharedCharacter.h"
+
 #include "BaseCharacter.generated.h"
+
 
 
 class UDecalComponent;
@@ -18,12 +21,9 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class PORTFOLIO_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class PORTFOLIO_API ABaseCharacter : public ASharedCharacter
 {
-
 	GENERATED_BODY()
-
-
 
 public:
 	// Sets default values for this character's properties
@@ -32,21 +32,8 @@ public:
 	// 컨트롤러
 	ACPP_CharacterController* controller;
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-	UGASAttributeSet* Attributes;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UDecalComponent* Cursor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-		class UAbilitySystemComponent* AbilitySystemComp;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
-		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Effects")
-		TArray<TSubclassOf<class UGASGameplayAbility>> DefaultAbilities;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
@@ -56,8 +43,6 @@ public:
 
 
 protected:
-
-
 	virtual void BeginPlay() override;
 
 public:
@@ -67,18 +52,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable, Category = "BaseCharacter")
-		void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel);
 
 
-
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-	virtual void InitializeAttributes();
-
-	virtual void GiveAbilities();
-
-	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
 	void cursorVisible(bool value);

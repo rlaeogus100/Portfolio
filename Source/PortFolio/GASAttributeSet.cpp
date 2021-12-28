@@ -5,7 +5,9 @@
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
+#include "Shared/SharedCharacter.h"
 #include "Enemy/EnemyBase.h"
+
 
 UGASAttributeSet::UGASAttributeSet()
 {
@@ -28,6 +30,8 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 	if (Health.GetBaseValue() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("deasdfath"), 0);
+		Cast<ASharedCharacter>(GetOwningActor())->Death();
+
 	}
 }
 

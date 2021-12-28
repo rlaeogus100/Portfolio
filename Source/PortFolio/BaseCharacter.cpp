@@ -25,11 +25,6 @@ ABaseCharacter::ABaseCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
-	AbilitySystemComp->SetIsReplicated(true);
-
-
-	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
 	Cursor = CreateDefaultSubobject<UDecalComponent>(TEXT("Cursor"));
 
@@ -64,14 +59,14 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	controller = Cast<ACPP_CharacterController>((UGameplayStatics::GetPlayerController(GetWorld(), 0)));
+	//controller = Cast<ACPP_CharacterController>((UGameplayStatics::GetPlayerController(GetWorld(), 0)));
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (IsLocallyControlled()) {
+	//if (IsLocallyControlled()) {
 		//if (!controller->bInventory) {
 		//	// 마우스 커서 위치로 데칼 옮기기
 		//	FHitResult result;
@@ -82,7 +77,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 		//	}
 
 		//}
-	}
+	//}
 }
 
 // Called to bind functionality to input
@@ -91,88 +86,34 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
-	if (AbilitySystemComp && InputComponent)
-	{
+	//if (AbilitySystemComp && InputComponent)
+	//{
+	//	const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
+	//	AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
+	//}
 
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
-		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}
-
-}
-
-void ABaseCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel)
-{
-	if (HasAuthority() && AbilitySystemComp)
-	{
-
-		if (AbilityToGet)
-		{
-			UE_LOG(LogTemp, Error, TEXT("inteializeability"), 0);
-			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
-		}
-		AbilitySystemComp->InitAbilityActorInfo(this, this);
-	}
 }
 
 
 
-UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
-{
-	return  AbilitySystemComp;
-}
 
-void ABaseCharacter::InitializeAttributes()
-{
-	if (AbilitySystemComp && DefaultAttributeEffect)
-	{
-		FGameplayEffectContextHandle EffectContext = AbilitySystemComp->MakeEffectContext();
-		EffectContext.AddSourceObject(this);
-
-		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComp->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
-
-		if (SpecHandle.IsValid())
-		{
-			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-		}
-	}
-}
-
-void ABaseCharacter::GiveAbilities()
-{
-	if (HasAuthority() && AbilitySystemComp && DefaultAbilities.Num() > 0)
-	{
-		for (TSubclassOf<UGASGameplayAbility>& StartupAbility : DefaultAbilities)
-		{
-			AbilitySystemComp->GiveAbility(
-				FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
-
-		}
-	}
-}
-
-void ABaseCharacter::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	AbilitySystemComp->InitAbilityActorInfo(this, this);
-
-	InitializeAttributes();
-	GiveAbilities();
-}
 
 void ABaseCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	AbilitySystemComp->InitAbilityActorInfo(this, this);
-	InitializeAttributes();
+	//AbilitySystemComp->InitAbilityActorInfo(this, this);
+	//InitializeAttributes();
 
-	if (AbilitySystemComp && InputComponent)
-	{
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
-		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}
+	//if (AbilitySystemComp && InputComponent)
+	//{
+	//	const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
+	//	AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
+	//}
 }
+
+
+
 
 void ABaseCharacter::cursorVisible(bool value)
 {

@@ -3,7 +3,7 @@
 
 #include "CPP_Item.h"
 #include "CPP_ItemNameBroadcastUW.h"
-#include "../BaseCharacter.h"
+#include "../CharacterBase.h"
 
 #include "kismet/GameplayStatics.h"
 #include "kismet/KismetMathLibrary.h"
@@ -48,12 +48,14 @@ void ACPP_Item::NameWidgetRotationUpdate()
 {
 	ACharacter* character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (character != nullptr) {
-		ABaseCharacter* base = Cast<ABaseCharacter>(character);
-		//USceneComponent* CamTran = base->Camera->GetTransformComponent();
-		FRotator CamRot = base->Camera->GetComponentRotation();
-		FRotator TempRot = FRotator(CamRot.Pitch * -1.f, CamRot.Yaw, CamRot.Roll);
-		FRotator Rot = UKismetMathLibrary::ComposeRotators(TempRot, FRotator(-180, 0, -180));
-		ItemNameBar->SetWorldRotation(Rot);
+		ACharacterBase* base = Cast<ACharacterBase>(character);
+		if (base != nullptr) {
+			//USceneComponent* CamTran = base->Camera->GetTransformComponent();
+			FRotator CamRot = base->Camera->GetComponentRotation();
+			FRotator TempRot = FRotator(CamRot.Pitch * -1.f, CamRot.Yaw, CamRot.Roll);
+			FRotator Rot = UKismetMathLibrary::ComposeRotators(TempRot, FRotator(-180, 0, -180));
+			ItemNameBar->SetWorldRotation(Rot);
+		}
 	}
 
 }

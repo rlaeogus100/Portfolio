@@ -17,8 +17,7 @@
 class UCPP_GameplayEffect;
 
 UCLASS()
-class PORTFOLIO_API AEnemyBase : public ACharacter, public IAbilitySystemInterface
-{
+class PORTFOLIO_API AEnemyBase : public ACharacter, public IAbilitySystemInterface{
 	GENERATED_BODY()
 
 public:
@@ -60,6 +59,8 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 	//virtual void OnRep_PlayerState() override;
+
+
 
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
 		float GetHealth();
