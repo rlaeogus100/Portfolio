@@ -25,12 +25,13 @@ ACPP_CharacterController::ACPP_CharacterController()
 void ACPP_CharacterController::MoveToHitLocation(FHitResult Hit)
 {
 	// VectorLength ´ë¿ë
-	if (MinClickDinstance <= ((GetPawn()->GetActorLocation()) - Hit.Location).Size())
-	{
-		FVector Target = Hit.Location;
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Target);
+	if (GetPawn()) {
+		if (MinClickDinstance <= ((GetPawn()->GetActorLocation()) - Hit.Location).Size())
+		{
+			FVector Target = Hit.Location;
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Target);
+		}
 	}
-
 }
 
 void ACPP_CharacterController::SetupInputComponent()
@@ -98,7 +99,6 @@ void ACPP_CharacterController::OnInventory_Pressed()
 
 				if (character != nullptr) {
 					//character->cursorVisible(false);
-					UE_LOG(LogTemp, Log, TEXT("Null"), 0);
 				}
 				bInventory = true;
 			}

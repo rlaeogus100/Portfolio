@@ -25,6 +25,7 @@ public:
 	
 	bool bSetDestination = false;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool bInventory = false;
 
 	UCPP_InventoryUW* Inventory;
