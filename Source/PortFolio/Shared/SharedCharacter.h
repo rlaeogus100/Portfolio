@@ -56,8 +56,10 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void Death();
 
+	UFUNCTION(BlueprintCallable)
+	void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
 
 };

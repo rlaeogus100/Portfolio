@@ -21,4 +21,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
 		float GetAttackPower();
+
 };
