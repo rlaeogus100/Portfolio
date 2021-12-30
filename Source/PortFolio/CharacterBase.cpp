@@ -61,3 +61,9 @@ void ACharacterBase::cursorVisible(bool value)
 {
 	Cursor->SetVisibleFlag(value);
 }
+
+float ACharacterBase::ChangeAttackPower(float value)
+{
+	Attributes->SetAttackPower(value);
+	return Attributes->GetAttackPower();
+}

@@ -47,4 +47,7 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 	void cursorVisible(bool value);
+
+	UFUNCTION(BlueprintCallable)
+	float ChangeAttackPower(float value);
 };
