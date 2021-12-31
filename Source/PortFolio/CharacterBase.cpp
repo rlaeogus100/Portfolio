@@ -67,3 +67,10 @@ float ACharacterBase::ChangeAttackPower(float value)
 	Attributes->SetAttackPower(value);
 	return Attributes->GetAttackPower();
 }
+
+
+float ACharacterBase::ChangeAttackMagic(float value)
+{
+	Attributes->SetAttackMagic(value);
+	return Attributes->GetAttackMagic();
+}

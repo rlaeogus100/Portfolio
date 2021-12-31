@@ -91,7 +91,7 @@ void ASharedCharacter::GiveAbilities()
 		for (TSubclassOf<UGASGameplayAbility>& StartupAbility : DefaultAbilities)
 		{
 			AbilitySystemComp->GiveAbility(
-				FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+				FGameplayAbilitySpec(StartupAbility, 1, INDEX_NONE, this));
 
 		}
 	}

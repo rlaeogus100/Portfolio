@@ -50,4 +50,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float ChangeAttackPower(float value);
+
+	UFUNCTION(BlueprintCallable)
+		float ChangeAttackMagic(float value);
 };
