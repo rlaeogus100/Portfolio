@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Engine/DataTable.h"
+#include "../GASGameplayAbility.h"
 #include "LevelUpExpTable.generated.h"
 
 
@@ -39,4 +40,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+};
+
+USTRUCT(BlueprintType)
+struct FAbilityResultStruct
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FAbilityResultStruct() :ability(nullptr), bSuccess(false) {};
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UGameplayAbility* ability;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bSuccess;
 };

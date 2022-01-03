@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "GASComponent.h"
 #include "CPP_CharacterController.h"
 #include "kismet/GameplayStatics.h"
 
@@ -50,9 +51,10 @@ void ACharacterBase::BeginPlay() {
 void ACharacterBase::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-
-	AbilitySystemComp->InitAbilityActorInfo(this, this);
-	InitializeAttributes();
+	if (AbilitySystemComp) {
+		AbilitySystemComp->InitAbilityActorInfo(this, this);
+		InitializeAttributes();
+	}
 
 }
 

@@ -18,12 +18,18 @@
 // Sets default values
 ASharedCharacter::ASharedCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	if(AbilitySystemComp){ UE_LOG(LogTemp, Error, TEXT("????"), 0); }
+	AbilitySystemComp = CreateDefaultSubobject<UGASComponent>(TEXT("AbilitySystemComp"));
 	AbilitySystemComp->SetIsReplicated(true);
-
+	if (!AbilitySystemComp) {
+		UE_LOG(LogTemp, Error, TEXT("nullptr :: AbilitySystemComp"), 0);
+	}
+	if (AbilitySystemComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s"), *GetName());
+	}
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
 }
@@ -32,7 +38,7 @@ ASharedCharacter::ASharedCharacter()
 void ASharedCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -65,21 +71,31 @@ void ASharedCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityTo
 
 UAbilitySystemComponent* ASharedCharacter::GetAbilitySystemComponent() const
 {
-	return  AbilitySystemComp;
+	return  Cast<UAbilitySystemComponent>(AbilitySystemComp);
 }
 
 void ASharedCharacter::InitializeAttributes()
 {
-	if (AbilitySystemComp && DefaultAttributeEffect)
+	if (HasAuthority() && AbilitySystemComp && DefaultAttributeEffect)
 	{
 		FGameplayEffectContextHandle EffectContext = AbilitySystemComp->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
 
 		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComp->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
-
+		UE_LOG(LogTemp, Error, TEXT("ptr :: asdfsadf"), 0);
 		if (SpecHandle.IsValid())
 		{
+			UE_LOG(LogTemp, Error, TEXT("ptr :: asdfsadf"), 0);
 			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+		// Now apply passives / 패시브 적용
+		for (TSubclassOf<UGameplayEffect>& GameplayEffect : PassiveGameplayEffects)
+		{
+			FGameplayEffectSpecHandle NewHandle = AbilitySystemComp->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+			if (NewHandle.IsValid())
+			{
+				FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComp->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComp);
+			}
 		}
 	}
 }
@@ -92,19 +108,23 @@ void ASharedCharacter::GiveAbilities()
 		{
 			AbilitySystemComp->GiveAbility(
 				FGameplayAbilitySpec(StartupAbility, 1, INDEX_NONE, this));
-
 		}
+
 	}
 }
 
 void ASharedCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	if (AbilitySystemComp) {
+		AbilitySystemComp->InitAbilityActorInfo(this, this);
 
-	AbilitySystemComp->InitAbilityActorInfo(this, this);
-
-	InitializeAttributes();
-	GiveAbilities();
+		InitializeAttributes();
+		GiveAbilities();
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("Possessed : %s"), *GetName());
+	}
 }
 
 void ASharedCharacter::GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities)
@@ -124,4 +144,25 @@ void ASharedCharacter::GetActiveAbilitiesWithTags(const FGameplayTagContainer& G
 		}
 	}
 }
+
+float ASharedCharacter::GetMaxHelth()
+{
+	if (Attributes)
+		return Attributes->GetMaxHealth();
+	else
+		return -1;
+}
+
+float ASharedCharacter::GetCurrentHelth()
+{
+	if (Attributes)
+		return Attributes->GetHealth();
+	else
+		return -1;
+}
+
+//int32 ASharedCharacter::GetCharacterLevel() const
+//{
+//	return CharacterLevel;
+//}
 

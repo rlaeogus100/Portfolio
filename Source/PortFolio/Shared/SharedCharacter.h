@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
 #include "../GASAttributeSet.h"
@@ -12,6 +11,8 @@
 
 
 #include "SharedCharacter.generated.h"
+
+class UGASComponent;
 
 UCLASS()
 class PORTFOLIO_API ASharedCharacter : public ACharacter, public IAbilitySystemInterface
@@ -26,7 +27,7 @@ public:
 		UGASAttributeSet* Attributes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-		class UAbilitySystemComponent* AbilitySystemComp;
+		UGASComponent* AbilitySystemComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
@@ -34,6 +35,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Effects")
 		TArray<TSubclassOf<class UGASGameplayAbility>> DefaultAbilities;
 
+	/** Passive gameplay effects applied on creation */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		TArray<TSubclassOf<UGameplayEffect>> PassiveGameplayEffects;
+
+	///** The level of this character, should not be modified directly once it has already spawned */
+	//UPROPERTY(EditAnywhere, Replicated, Category = "Abilities")
+	//	int32 CharacterLevel = 1;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -62,4 +70,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
 
+	UFUNCTION(BlueprintCallable)
+		float GetMaxHelth();
+
+	UFUNCTION(BlueprintCallable)
+		float GetCurrentHelth();
+
+	///** Returns the character level that is passed to the ability system */
+	//UFUNCTION(BlueprintCallable)
+	//	virtual int32 GetCharacterLevel() const;
 };

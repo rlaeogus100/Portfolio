@@ -22,16 +22,28 @@ void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	{
 		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
 	}
+
+	// 체력이 최대 체력을 넘어가는지.
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxHealthAttribute().GetNumericValueChecked(this));
+	}
 }
 
 void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	// hp가 0 이하로 떨어졌을 때 죽었다는 함수를 호출하기 위한 if문.
+
+
 	if (Health.GetBaseValue() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("deasdfath"), 0);
 		Cast<ASharedCharacter>(GetOwningActor())->Death();
 
+	}
+	else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 	}
 }
 
