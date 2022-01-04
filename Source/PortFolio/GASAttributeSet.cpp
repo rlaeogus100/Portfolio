@@ -24,17 +24,19 @@ void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
 	}
 
-	//// 체력이 최대 체력을 넘어가는지.
-	//if (Attribute == GetHealthAttribute())
-	//{
-	//	UE_LOG(LogTemp, Error, TEXT("asdf"), 0);
-	//	NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxHealthAttribute().GetNumericValueChecked(this));
-	//}
+	// 체력이 최대 체력을 넘어가는지.
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxHealthAttribute().GetNumericValueChecked(this));
+	}
 }
 
 void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+	SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+	}
 	if (Health.GetBaseValue() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("deasdfath"), 0);

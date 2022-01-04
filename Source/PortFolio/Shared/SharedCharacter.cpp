@@ -57,7 +57,6 @@ void ASharedCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityTo
 
 		if (AbilityToGet)
 		{
-			UE_LOG(LogTemp, Error, TEXT("inteializeability"), 0);
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
 		}
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
@@ -77,10 +76,8 @@ void ASharedCharacter::InitializeAttributes()
 		EffectContext.AddSourceObject(this);
 
 		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComp->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
-		UE_LOG(LogTemp, Error, TEXT("ptr :: asdfsadf"), 0);
 		if (SpecHandle.IsValid())
 		{
-			UE_LOG(LogTemp, Error, TEXT("ptr :: asdfsadf"), 0);
 			FActiveGameplayEffectHandle GHandle = AbilitySystemComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 		}
 		// Now apply passives / 패시브 적용
@@ -117,11 +114,6 @@ void ASharedCharacter::PossessedBy(AController* NewController)
 
 		InitializeAttributes();
 		GiveAbilities();
-
-		UE_LOG(LogTemp, Error, TEXT("Not Error Possessed : %s"), *GetName());
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Error Possessed : %s"), *GetName());
 	}
 }
 

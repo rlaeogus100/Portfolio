@@ -20,10 +20,13 @@ class PORTFOLIO_API UGASComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-    UGASComponent();
+	UGASComponent();
 
 	UFUNCTION(BlueprintCallable)
-	FAbilityResultStruct TryActiveAbilitiesByTagAndReturn(const FGameplayTagContainer& GameplayTagContainer, bool bAllowRemoteActivation = true);
+		FAbilityResultStruct TryActiveAbilitiesByTagAndReturn(const FGameplayTagContainer& GameplayTagContainer, bool bAllowRemoteActivation = true);
+
+	UFUNCTION(BlueprintCallable)
+		FCoolDownStruct GetGameplayEffectDurationPersent(TSubclassOf<UGameplayEffect> SourceGameplayEffect, UAbilitySystemComponent* OptionalInstigatorFilterComponent, bool bEnforceOnGoingCheck = true);
 };
 
 

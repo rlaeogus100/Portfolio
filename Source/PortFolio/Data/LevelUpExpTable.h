@@ -56,3 +56,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool bSuccess;
 };
+
+USTRUCT(BlueprintType)
+struct FCoolDownStruct
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FCoolDownStruct() : remaining(0), duration(0), persent(0) {};
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float remaining;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float duration;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float persent;
+
+};
