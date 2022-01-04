@@ -16,6 +16,8 @@ class PORTFOLIO_API AEnemyCharacterBase : public ASharedCharacter
 	
 
 public:
+	AEnemyCharacterBase();
+
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
 		float GetHealth();
 

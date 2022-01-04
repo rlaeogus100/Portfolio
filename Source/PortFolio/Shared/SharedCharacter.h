@@ -6,13 +6,13 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
+#include "../GASComponent.h"
 #include "../GASAttributeSet.h"
 
 
 
 #include "SharedCharacter.generated.h"
 
-class UGASComponent;
 
 UCLASS()
 class PORTFOLIO_API ASharedCharacter : public ACharacter, public IAbilitySystemInterface
@@ -26,9 +26,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 		UGASAttributeSet* Attributes;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
-		UGASComponent* AbilitySystemComp;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+		UGASComponent*  AbilitySystemComp;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
 

@@ -9,6 +9,7 @@
 #include "../GASAttributeSet.h"
 #include "../GASComponent.h"
 #include "../GASGameplayAbility.h"
+
 #include "kismet/KismetMathLibrary.h"
 
 
@@ -20,16 +21,10 @@ ASharedCharacter::ASharedCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	if(AbilitySystemComp){ UE_LOG(LogTemp, Error, TEXT("????"), 0); }
+
 	AbilitySystemComp = CreateDefaultSubobject<UGASComponent>(TEXT("AbilitySystemComp"));
 	AbilitySystemComp->SetIsReplicated(true);
-	if (!AbilitySystemComp) {
-		UE_LOG(LogTemp, Error, TEXT("nullptr :: AbilitySystemComp"), 0);
-	}
-	if (AbilitySystemComp)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s"), *GetName());
-	}
+
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
 }
@@ -71,7 +66,7 @@ void ASharedCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityTo
 
 UAbilitySystemComponent* ASharedCharacter::GetAbilitySystemComponent() const
 {
-	return  Cast<UAbilitySystemComponent>(AbilitySystemComp);
+	return AbilitySystemComp;
 }
 
 void ASharedCharacter::InitializeAttributes()
@@ -116,14 +111,17 @@ void ASharedCharacter::GiveAbilities()
 void ASharedCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
 	if (AbilitySystemComp) {
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
 
 		InitializeAttributes();
 		GiveAbilities();
+
+		UE_LOG(LogTemp, Error, TEXT("Not Error Possessed : %s"), *GetName());
 	}
 	else {
-		UE_LOG(LogTemp, Error, TEXT("Possessed : %s"), *GetName());
+		UE_LOG(LogTemp, Error, TEXT("Error Possessed : %s"), *GetName());
 	}
 }
 

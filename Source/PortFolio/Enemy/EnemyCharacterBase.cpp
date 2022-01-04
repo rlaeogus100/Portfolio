@@ -3,6 +3,9 @@
 
 #include "EnemyCharacterBase.h"
 
+AEnemyCharacterBase::AEnemyCharacterBase() {}
+
+
 float AEnemyCharacterBase::GetHealth()
 {
 	if (!Attributes)
