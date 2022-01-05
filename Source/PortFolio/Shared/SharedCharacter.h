@@ -67,6 +67,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void Death();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void WidgetHPUpdate(float persent);
+
 	UFUNCTION(BlueprintCallable)
 	void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
 

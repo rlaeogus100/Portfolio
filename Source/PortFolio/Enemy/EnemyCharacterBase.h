@@ -16,6 +16,13 @@ class PORTFOLIO_API AEnemyCharacterBase : public ASharedCharacter
 	
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bHPVisible = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UWidgetComponent* EnemyHPBar;
+
+public:
 	AEnemyCharacterBase();
 
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
@@ -24,4 +31,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attribute")
 		float GetAttackPower();
 
+	void NameWidgetRotationUpdate();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "HPBar")
+	bool SetHPBarVisible(bool a);
 };

@@ -33,10 +33,17 @@ void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 
 void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
+
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 	SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+	float persent = GetHealth() / GetMaxHealth();
+
+	Cast<ASharedCharacter>(GetOwningActor())->WidgetHPUpdate(persent);
+
 	}
+
+	
 	if (Health.GetBaseValue() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("deasdfath"), 0);
