@@ -128,7 +128,7 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 				float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
 				if (elementDamage > 0) {
 					UE_LOG(LogTemp, Error, TEXT("Critical"), 0);
-					SetHealth(FMath::Clamp(OldHealth - elementDamage, 0.0f, GetMaxHealth()));
+					SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
 					TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
 				}
 			}
