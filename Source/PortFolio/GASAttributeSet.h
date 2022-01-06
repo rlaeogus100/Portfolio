@@ -88,6 +88,9 @@ public:
 		UFUNCTION()
 		virtual void OnRep_MagicDefence(const FGameplayAttributeData& OldValue);
 
-
+	// 계산기에서 데미지 리턴 용
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+		FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Damage)
 
 };

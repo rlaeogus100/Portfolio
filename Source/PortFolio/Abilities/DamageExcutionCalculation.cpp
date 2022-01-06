@@ -15,6 +15,7 @@ struct DamageCalcStruct {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackMagic);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicDefence);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Health);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
 
 	DamageCalcStruct()
 	{
@@ -29,6 +30,8 @@ struct DamageCalcStruct {
 		// 별개로 지금 만드는 프로젝트에서는 혹시 버프가 존재한다면 공격 중에 버프가 끝났을 시 공격을 시작했던 값 그대로 사용하고자 사격용 계산기를 따로 만들지 않아서 근접공격 또한 스냅샷을 함.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, AttackPower, Source, true);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, AttackMagic, Source, true);
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UGASAttributeSet, Damage, Source, true);
 
 
 	}
@@ -48,6 +51,7 @@ UDamageExcutionCalculation::UDamageExcutionCalculation()
 	RelevantAttributesToCapture.Add(DamageStatic().AttackPowerDef);
 	RelevantAttributesToCapture.Add(DamageStatic().AttackMagicDef);
 	RelevantAttributesToCapture.Add(DamageStatic().HealthDef);
+	RelevantAttributesToCapture.Add(DamageStatic().DamageDef);
 }
 
 void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, OUT FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -106,8 +110,6 @@ void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCus
 	{
 
 		DamageDone = AttackPower - MeleeDefence;
-		UE_LOG(LogTemp, Error, TEXT("AttackPower%.f"), AttackPower);
-		UE_LOG(LogTemp, Error, TEXT("MeleeDefence%.f"), MeleeDefence);
 	}
 	else 
 	{
@@ -115,9 +117,7 @@ void UDamageExcutionCalculation::Execute_Implementation(const FGameplayEffectCus
 	}
 	if (DamageDone > 0.f)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%.f"), DamageDone);
-		// 데미지를 HP에 Add함 Property는 직접적인 대상의 주소값을 지칭함.
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatic().HealthProperty, EGameplayModOp::Additive, -DamageDone));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatic().DamageProperty, EGameplayModOp::Additive, DamageDone));
 	}
 
 }

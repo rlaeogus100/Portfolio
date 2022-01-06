@@ -13,6 +13,15 @@
 
 #include "SharedCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EElementEnum : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Fire UMETA(DisplayName = "Fire"),
+	Aqua UMETA(DisplayName = "Aqua"),
+	Lightning UMETA(DisplayName = "Lightning")
+};
+
 
 UCLASS()
 class PORTFOLIO_API ASharedCharacter : public ACharacter, public IAbilitySystemInterface
@@ -39,6 +48,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 		TArray<TSubclassOf<UGameplayEffect>> PassiveGameplayEffects;
 
+	TArray<FActiveGameplayEffectHandle> ActiveGEHandles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
+		EElementEnum Element;
+
 	///** The level of this character, should not be modified directly once it has already spawned */
 	//UPROPERTY(EditAnywhere, Replicated, Category = "Abilities")
 	//	int32 CharacterLevel = 1;
@@ -60,6 +74,8 @@ public:
 
 	virtual void InitializeAttributes();
 
+	virtual void RemovePassive();
+
 	virtual void GiveAbilities();
 
 	virtual void PossessedBy(AController* NewController) override;
@@ -70,6 +86,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void WidgetHPUpdate(float persent);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void ChangeHP(float hp, EElementEnum damageElement = EElementEnum::None);
+
 	UFUNCTION(BlueprintCallable)
 	void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
 
@@ -78,6 +97,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		float GetCurrentHelth();
+
+	UFUNCTION(BlueprintCallable)
+		float ElementDamage(EElementEnum enemy, float OriginDamage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser);
+
+	void HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser);
+
 
 	///** Returns the character level that is passed to the ability system */
 	//UFUNCTION(BlueprintCallable)

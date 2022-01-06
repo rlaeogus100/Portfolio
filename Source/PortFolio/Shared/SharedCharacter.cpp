@@ -87,10 +87,22 @@ void ASharedCharacter::InitializeAttributes()
 			if (NewHandle.IsValid())
 			{
 				FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComp->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComp);
+				ActiveGEHandles.Add(ActiveGEHandle);
 			}
 		}
 	}
 }
+
+void ASharedCharacter::RemovePassive()
+{
+	if (HasAuthority() && AbilitySystemComp && DefaultAttributeEffect) {
+		for (auto handle : ActiveGEHandles) {
+			AbilitySystemComp->RemoveActiveGameplayEffect(handle);
+		}		
+	}
+}
+
+
 
 void ASharedCharacter::GiveAbilities()
 {
@@ -149,6 +161,34 @@ float ASharedCharacter::GetCurrentHelth()
 		return Attributes->GetHealth();
 	else
 		return -1;
+}
+
+float ASharedCharacter::ElementDamage(EElementEnum enemy, float OriginDamage)
+{
+	float damage = 0.0f;
+	switch (enemy) {
+	case EElementEnum::Fire:
+		if (Element == EElementEnum::Lightning) {
+			damage = OriginDamage * 0.5;
+		}
+		break;
+	case EElementEnum::Aqua:
+		if (Element == EElementEnum::Fire) {
+			damage = OriginDamage * 0.5;
+		}
+		break;
+	case EElementEnum::Lightning:
+		if (Element == EElementEnum::Aqua) {
+			damage = OriginDamage * 0.5;
+		}
+		break;
+	}
+	return damage;
+}
+
+void ASharedCharacter::HandleDamage(float DamageAmount, const FHitResult& HitInfo, const FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser)
+{
+	OnDamaged(DamageAmount, HitInfo, DamageTags, InstigatorCharacter, DamageCauser);
 }
 
 //int32 ASharedCharacter::GetCharacterLevel() const

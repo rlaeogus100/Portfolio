@@ -5,6 +5,8 @@
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
+#include "CPP_CharacterController.h"
+
 #include "Shared/SharedCharacter.h"
 
 
@@ -33,21 +35,110 @@ void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 
 void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
+	Super::PostGameplayEffectExecute(Data);
+
+	FGameplayEffectContextHandle Context = Data.EffectSpec.GetContext();
+	UAbilitySystemComponent* Source = Context.GetOriginalInstigatorAbilitySystemComponent();
+	const FGameplayTagContainer& SourceTags = *Data.EffectSpec.CapturedSourceTags.GetAggregatedTags();
+
+	// 사용 가능한 경우 이전과 새 사이의 델타 계산
+	float DeltaValue = 0;
+	if (Data.EvaluatedData.ModifierOp == EGameplayModOp::Type::Additive)
+	{
+		// 이 값이 가법적인 경우 나중에 전달할 원시 델타 값을 저장합니다.
+		DeltaValue = Data.EvaluatedData.Magnitude;
+	}
+
+	// 타겟 액터를 구하십시오. 이 액터는 우리의 소유자가 되어야 합니다.
+	AActor* TargetActor = nullptr;
+	AController* TargetController = nullptr;
+	ASharedCharacter* TargetCharacter = nullptr;
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		TargetCharacter = Cast<ASharedCharacter>(TargetActor);
+	}
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-	SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-	float persent = GetHealth() / GetMaxHealth();
-
-	Cast<ASharedCharacter>(GetOwningActor())->WidgetHPUpdate(persent);
-
+		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		float persent = GetHealth() / GetMaxHealth();
+		TargetCharacter->ChangeHP(DeltaValue);
+		TargetCharacter->WidgetHPUpdate(persent);
 	}
 
-	
+	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		// 원본 액터 가져오기
+		AActor* SourceActor = nullptr;
+		AController* SourceController = nullptr;
+		ASharedCharacter* SourceCharacter = nullptr;
+		if (Source && Source->AbilityActorInfo.IsValid() && Source->AbilityActorInfo->AvatarActor.IsValid())
+		{
+			SourceActor = Source->AbilityActorInfo->AvatarActor.Get();
+			SourceController = Source->AbilityActorInfo->PlayerController.Get();
+			if (SourceController == nullptr && SourceActor != nullptr)
+			{
+				if (APawn* Pawn = Cast<APawn>(SourceActor))
+				{
+					SourceController = Pawn->GetController();
+				}
+			}
+
+			// 컨트롤러를 사용하여 소스 폰 찾기
+			if (SourceController)
+			{
+				SourceCharacter = Cast<ASharedCharacter>(SourceController->GetPawn());
+			}
+			else
+			{
+				SourceCharacter = Cast<ASharedCharacter>(SourceActor);
+			}
+
+			// 설정된 경우 컨텍스트에 따라 원인 액터 설정
+			if (Context.GetEffectCauser())
+			{
+				SourceActor = Context.GetEffectCauser();
+			}
+		}
+
+		// 적중 결과 추출 시도
+		FHitResult HitResult;
+		if (Context.GetHitResult())
+		{
+			HitResult = *Context.GetHitResult();
+		}
+
+		// 데미지 정도를 로컬에 저장하고 데미지 속성을 삭제
+		const float LocalDamageDone = GetDamage();
+		SetDamage(0.f);
+
+		if (LocalDamageDone > 0)
+		{
+			// 상태 변화를 적용한 후 고정합니다.
+			const float OldHealth = GetHealth();
+			SetHealth(FMath::Clamp(OldHealth - LocalDamageDone, 0.0f, GetMaxHealth()));
+
+			if (TargetCharacter)
+			{
+				// 적절한 데미지.
+				TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor);
+				TargetCharacter->ChangeHP(-LocalDamageDone);
+				float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
+				if (elementDamage > 0) {
+					UE_LOG(LogTemp, Error, TEXT("Critical"), 0);
+					SetHealth(FMath::Clamp(OldHealth - elementDamage, 0.0f, GetMaxHealth()));
+					TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
+				}
+			}
+		}
+	}
+
 	if (Health.GetBaseValue() <= 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("deasdfath"), 0);
-		Cast<ASharedCharacter>(GetOwningActor())->Death();
+		TargetCharacter->Death();
+		TargetCharacter->RemovePassive();
 
 	}
 
