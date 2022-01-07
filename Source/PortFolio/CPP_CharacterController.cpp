@@ -22,7 +22,7 @@ ACPP_CharacterController::ACPP_CharacterController()
 }
 
 // 마우스 커서로 캐릭터를 이동하는 함수
-void ACPP_CharacterController::MoveToHitLocation(FHitResult Hit)
+void ACPP_CharacterController::MoveToHitLocation_Implementation(FHitResult Hit)
 {
 	// VectorLength 대용
 	if (GetPawn()) {
@@ -30,8 +30,14 @@ void ACPP_CharacterController::MoveToHitLocation(FHitResult Hit)
 		{
 			FVector Target = Hit.Location;
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Target);
+			this->GetPawn()->AddMovementInput(UKismetMathLibrary::GetDirectionUnitVector(GetPawn()->GetActorLocation(), Target), (GetPawn()->GetActorLocation() - Hit.Location).Size());
 		}
 	}
+}
+
+void ACPP_CharacterController::EventMoveToHitLocation_Implementation(FHitResult Hit)
+{
+	MoveToHitLocation(Hit);
 }
 
 void ACPP_CharacterController::SetupInputComponent()
@@ -52,7 +58,7 @@ void ACPP_CharacterController::Tick(float DeltaSeconds)
 			// 마우스 커서 위치로 히트리절트를 구함
 			FHitResult Hit;
 			GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, Hit);
-			MoveToHitLocation(Hit);
+			EventMoveToHitLocation(Hit);
 		}
 	}
 }
@@ -60,7 +66,7 @@ void ACPP_CharacterController::Tick(float DeltaSeconds)
 void ACPP_CharacterController::BeginPlay()
 {
 	Super::BeginPlay();
-		bShowMouseCursor = true;
+	bShowMouseCursor = true;
 	character = Cast<ACharacterBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 

@@ -38,8 +38,11 @@ public:
 	
 
 	// 마우스 커서로 캐릭터를 이동하는 함수
-	UFUNCTION()
+	UFUNCTION(NetMulticast, reliable)
 		void MoveToHitLocation(FHitResult Hit);
+
+	UFUNCTION(Server, unreliable)
+	void EventMoveToHitLocation(FHitResult Hit);
 
 	virtual void SetupInputComponent();
 
