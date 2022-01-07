@@ -19,25 +19,6 @@ AEnemyCharacterBase::AEnemyCharacterBase() {
 }
 
 
-float AEnemyCharacterBase::GetHealth()
-{
-	if (!Attributes)
-		return -1.f;
-
-	return Attributes->GetHealth();
-}
-
-float AEnemyCharacterBase::GetAttackPower()
-{
-
-	if (!Attributes)
-		return -1.f;
-
-	return Attributes->GetAttackPower();
-}
-
-
-
 void AEnemyCharacterBase::NameWidgetRotationUpdate()
 {
 	if (bHPVisible) {

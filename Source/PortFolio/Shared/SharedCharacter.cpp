@@ -163,6 +163,38 @@ float ASharedCharacter::GetCurrentHelth()
 		return -1;
 }
 
+float ASharedCharacter::GetAttackPower()
+{
+	if (Attributes)
+		return Attributes->GetAttackPower();
+	else
+		return -1;
+}
+
+float ASharedCharacter::GetMagicPower()
+{
+	if (Attributes)
+		return Attributes->GetAttackMagic();
+	else
+		return -1;
+}
+
+float ASharedCharacter::GetDefenseMelee()
+{
+	if (Attributes)
+		return Attributes->GetMeleeDefence();
+	else
+		return -1;
+}
+
+float ASharedCharacter::GetDefenseMagic()
+{
+	if (Attributes)
+		return Attributes->GetMagicDefence();
+	else
+		return -1;
+}
+
 float ASharedCharacter::ElementDamage(EElementEnum enemy, float OriginDamage)
 {
 	float damage = 0.0f;

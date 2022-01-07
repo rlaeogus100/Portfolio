@@ -36,8 +36,8 @@ public:
 		UGASAttributeSet* Attributes;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
-		UGASComponent*  AbilitySystemComp;
-	
+		UGASComponent* AbilitySystemComp;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 		TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
 
@@ -60,7 +60,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -90,13 +90,27 @@ public:
 		void ChangeHP(float hp, EElementEnum damageElement = EElementEnum::None);
 
 	UFUNCTION(BlueprintCallable)
-	void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
+		void GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<class UGASGameplayAbility*>& ActiveAbilities);
 
 	UFUNCTION(BlueprintCallable)
 		float GetMaxHelth();
 
 	UFUNCTION(BlueprintCallable)
 		float GetCurrentHelth();
+
+	UFUNCTION(BlueprintCallable)
+		float GetAttackPower();
+
+	UFUNCTION(BlueprintCallable)
+		float GetMagicPower();
+
+	UFUNCTION(BlueprintCallable)
+		float GetDefenseMelee();
+
+	UFUNCTION(BlueprintCallable)
+		float GetDefenseMagic();
+
+
 
 	UFUNCTION(BlueprintCallable)
 		float ElementDamage(EElementEnum enemy, float OriginDamage);

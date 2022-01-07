@@ -25,11 +25,6 @@ public:
 public:
 	AEnemyCharacterBase();
 
-	UFUNCTION(BlueprintCallable, Category = "Attribute")
-		float GetHealth();
-
-	UFUNCTION(BlueprintCallable, Category = "Attribute")
-		float GetAttackPower();
 
 	void NameWidgetRotationUpdate();
 

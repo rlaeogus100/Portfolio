@@ -60,13 +60,6 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 		TargetCharacter = Cast<ASharedCharacter>(TargetActor);
 	}
 
-	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
-	{
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-		float persent = GetHealth() / GetMaxHealth();
-		TargetCharacter->ChangeHP(DeltaValue);
-		TargetCharacter->WidgetHPUpdate(persent);
-	}
 
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
@@ -132,9 +125,22 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 					TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
 				}
 			}
+
+			float persent = GetHealth() / GetMaxHealth();
+			TargetCharacter->WidgetHPUpdate(persent);
 		}
 	}
-
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		if (GetHealth() >= GetMaxHealth()) {
+			SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		}
+		else {
+			float persent = GetHealth() / GetMaxHealth();
+			TargetCharacter->WidgetHPUpdate(persent);
+			TargetCharacter->ChangeHP(DeltaValue);
+		}
+	}
 	if (Health.GetBaseValue() <= 0)
 	{
 		TargetCharacter->Death();
