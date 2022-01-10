@@ -58,7 +58,12 @@ void ACPP_CharacterController::Tick(float DeltaSeconds)
 			// 마우스 커서 위치로 히트리절트를 구함
 			FHitResult Hit;
 			GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, true, Hit);
-			EventMoveToHitLocation(Hit);
+			if (HasAuthority)
+				EventMoveToHitLocation(Hit);
+			else {
+				EventMoveToHitLocation(Hit);
+
+			}
 		}
 	}
 }
