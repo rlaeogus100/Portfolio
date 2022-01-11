@@ -49,8 +49,8 @@ UDamageExcutionCalculation::UDamageExcutionCalculation()
 	RelevantAttributesToCapture.Add(DamageStatic().MeleeDefenceDef);
 	RelevantAttributesToCapture.Add(DamageStatic().MagicDefenceDef);
 	RelevantAttributesToCapture.Add(DamageStatic().AttackPowerDef);
-	RelevantAttributesToCapture.Add(DamageStatic().AttackMagicDef);
 	RelevantAttributesToCapture.Add(DamageStatic().HealthDef);
+	RelevantAttributesToCapture.Add(DamageStatic().AttackMagicDef);
 	RelevantAttributesToCapture.Add(DamageStatic().DamageDef);
 }
 

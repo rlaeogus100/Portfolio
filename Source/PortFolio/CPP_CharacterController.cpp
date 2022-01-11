@@ -4,6 +4,7 @@
 #include "CPP_CharacterController.h"
 #include "Inventory/CPP_InventoryUW.h"
 #include "CharacterBase.h"
+#include "Net/UnrealNetwork.h"
 
 #include "kismet/KismetMathLibrary.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -18,7 +19,6 @@ ACPP_CharacterController::ACPP_CharacterController()
 {
 	// 틱 활성화
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // 마우스 커서로 캐릭터를 이동하는 함수
@@ -106,7 +106,10 @@ void ACPP_CharacterController::OnInventory_Pressed()
 
 				if (character != nullptr) {
 					//character->cursorVisible(false);
+					character->bInventory = true;
+					character->Inventory = Inventory;
 				}
+			
 				bInventory = true;
 			}
 		}
@@ -117,10 +120,7 @@ void ACPP_CharacterController::OnInventory_Pressed()
 void ACPP_CharacterController::InvisibleInventory()
 {
 	if (character != nullptr) {
-		//character->cursorVisible(true);
-	}
-	else {
-		UE_LOG(LogTemp, Log, TEXT("Nusadfll"), 0);
+		character->bInventory = false;
 	}
 	bInventory = false;
 
@@ -149,4 +149,17 @@ void ACPP_CharacterController::InventoryDropMenuClose()
 		Inventory->CloseDropMenu();
 	}
 }
+
+
+void ACPP_CharacterController::DeathInventoryClose()
+{
+	if (bInventory)
+	{
+		if (Inventory != nullptr)
+		{
+			Inventory->InvisibleSelf();
+		}
+	}
+}
+
 

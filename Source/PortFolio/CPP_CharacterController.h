@@ -16,8 +16,6 @@ UCLASS()
 class PORTFOLIO_API ACPP_CharacterController : public APlayerController
 {
 	GENERATED_BODY()
-	
-
 
 public:
 	UPROPERTY(EditAnywhere, Blueprintreadonly)
@@ -67,6 +65,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void InventoryDropMenuClose();
+
+
+	void DeathInventoryClose();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory", Meta = (AllowPrivateAccess = true))

@@ -31,4 +31,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void CloseDropMenu();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void RefreshState();
 };

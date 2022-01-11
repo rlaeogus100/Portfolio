@@ -53,6 +53,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 		EElementEnum Element;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "State", replicated)
+		bool bIsAlive = true;
+
+	bool bInventory = false;
 	///** The level of this character, should not be modified directly once it has already spawned */
 	//UPROPERTY(EditAnywhere, Replicated, Category = "Abilities")
 	//	int32 CharacterLevel = 1;
@@ -63,6 +67,8 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -120,7 +126,9 @@ public:
 
 	void HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser);
 
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void ChangeStateHandle();
+	
 	///** Returns the character level that is passed to the ability system */
 	//UFUNCTION(BlueprintCallable)
 	//	virtual int32 GetCharacterLevel() const;

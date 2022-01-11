@@ -2,12 +2,13 @@
 
 
 #include "CharacterBase.h"
-
+#include "Net/UnrealNetwork.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "CPP_CharacterController.h"
+#include "Inventory/CPP_InventoryUW.h"
 #include "kismet/GameplayStatics.h"
 
 
@@ -38,6 +39,7 @@ ACharacterBase::ACharacterBase() {
 		Cursor->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
 
 	}
+
 }
 
 void ACharacterBase::BeginPlay() {
@@ -45,6 +47,13 @@ void ACharacterBase::BeginPlay() {
 
 	controller = Cast<ACPP_CharacterController>((UGameplayStatics::GetPlayerController(GetWorld(), 0)));
 
+}
+
+void ACharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ACharacterBase, Inventory, COND_SimulatedOnly)
 }
 
 void ACharacterBase::OnRep_PlayerState()
@@ -74,3 +83,4 @@ float ACharacterBase::ChangeAttackMagic(float value)
 	Attributes->SetAttackMagic(value);
 	return Attributes->GetAttackMagic();
 }
+

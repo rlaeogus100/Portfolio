@@ -15,6 +15,7 @@ class UCPP_GameplayEffect;
 class ACPP_CharacterController;
 class UCameraComponent;
 class USpringArmComponent;
+class UCPP_InventoryUW;
 
 UCLASS()
 class PORTFOLIO_API ACharacterBase : public ASharedCharacter
@@ -41,8 +42,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, replicated)
+	UCPP_InventoryUW* Inventory;
+
 
 public:
+
+	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
 	virtual void OnRep_PlayerState() override;
 
@@ -53,4 +59,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		float ChangeAttackMagic(float value);
+
+
 };

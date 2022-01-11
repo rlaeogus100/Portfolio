@@ -120,7 +120,6 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 				TargetCharacter->ChangeHP(-LocalDamageDone);
 				float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
 				if (elementDamage > 0) {
-					UE_LOG(LogTemp, Error, TEXT("Critical"), 0);
 					SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
 					TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
 				}
@@ -141,11 +140,18 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 			TargetCharacter->ChangeHP(DeltaValue);
 		}
 	}
+	if (TargetCharacter) {
+		if (TargetCharacter->bIsAlive)
+			TargetCharacter->ChangeStateHandle();
+	}
 	if (Health.GetBaseValue() <= 0)
 	{
-		TargetCharacter->Death();
+		ACPP_CharacterController* Controller = Cast<ACPP_CharacterController>(TargetController);
+		if (Controller) {
+			Controller->DeathInventoryClose();
+		}
 		TargetCharacter->RemovePassive();
-
+		TargetCharacter->Death();
 	}
 
 }
@@ -154,7 +160,8 @@ void UGASAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UGASAttributeSet, Health);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, Health, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME(UGASAttributeSet, Health);
 	DOREPLIFETIME(UGASAttributeSet, MaxHealth);
 	DOREPLIFETIME(UGASAttributeSet, Stamina);
 	DOREPLIFETIME(UGASAttributeSet, AttackPower);
@@ -175,13 +182,13 @@ void UGASAttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData& Affec
 
 	if (!FMath::IsNearlyEqual(CurrentMaxValue, NewMaxValue) && AbilityComp)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%.f GASAttributeSet"), NewMaxValue);
-		// Change current value to maintain the current Val / Max percent
 		// 현재 값을 변경하여 현재 Val/Max 백분율을 유지합니다.
 		const float CurrentValue = AffectedAttribute.GetCurrentValue();
+
 		float NewDelta = (CurrentMaxValue > 0.f) ? (CurrentValue * NewMaxValue / CurrentMaxValue) - CurrentValue : NewMaxValue;
 
 		AbilityComp->ApplyModToAttributeUnsafe(AffectedAttributeProperty, EGameplayModOp::Additive, NewDelta);
+
 	}
 }
 

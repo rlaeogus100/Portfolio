@@ -11,7 +11,7 @@
 #include "../GASGameplayAbility.h"
 
 #include "kismet/KismetMathLibrary.h"
-
+#include "../CPP_CharacterController.h"
 
 #include "Net/UnrealNetwork.h"
 #include "UObject/ConstructorHelpers.h"
@@ -27,6 +27,7 @@ ASharedCharacter::ASharedCharacter()
 
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
+
 }
 
 // Called when the game starts or when spawned
@@ -41,6 +42,13 @@ void ASharedCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASharedCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ASharedCharacter, bIsAlive, COND_SimulatedOnly)
 }
 
 // Called to bind functionality to input
@@ -98,7 +106,7 @@ void ASharedCharacter::RemovePassive()
 	if (HasAuthority() && AbilitySystemComp && DefaultAttributeEffect) {
 		for (auto handle : ActiveGEHandles) {
 			AbilitySystemComp->RemoveActiveGameplayEffect(handle);
-		}		
+		}
 	}
 }
 
