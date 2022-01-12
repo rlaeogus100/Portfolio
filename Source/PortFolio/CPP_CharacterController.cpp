@@ -85,36 +85,39 @@ void ACPP_CharacterController::OnSetDestination_Released()
 
 void ACPP_CharacterController::OnInventory_Pressed()
 {
-	if (bInventory)
-	{
-		if (Inventory != nullptr)
+	if (character->bIsAlive) {
+		if (bInventory)
 		{
-			Inventory->InvisibleSelf();
-		}
-	}
-	else
-	{
-		if (Inventory_Widget != nullptr)
-		{
-			Inventory = CreateWidget< UCPP_InventoryUW>(this, Inventory_Widget);
 			if (Inventory != nullptr)
 			{
-				Inventory->SpawnInventory();
-				Inventory->AddToViewport();
-				Inventory->SetFocus();
-
-
-				if (character != nullptr) {
-					//character->cursorVisible(false);
-					character->bInventory = true;
-					character->Inventory = Inventory;
-				}
-			
-				bInventory = true;
+				Inventory->InvisibleSelf();
 			}
 		}
-	}
+		else
+		{
 
+			if (Inventory_Widget != nullptr)
+			{
+				Inventory = CreateWidget< UCPP_InventoryUW>(this, Inventory_Widget);
+				if (Inventory != nullptr)
+				{
+					Inventory->SpawnInventory();
+					Inventory->AddToViewport();
+					Inventory->SetFocus();
+
+
+					if (character != nullptr) {
+						//character->cursorVisible(false);
+						character->bInventory = true;
+						character->Inventory = Inventory;
+					}
+
+					bInventory = true;
+				}
+			}
+
+		}
+	}
 }
 
 void ACPP_CharacterController::InvisibleInventory()
