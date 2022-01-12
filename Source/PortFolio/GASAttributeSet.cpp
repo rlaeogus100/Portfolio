@@ -59,99 +59,103 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 		TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		TargetCharacter = Cast<ASharedCharacter>(TargetActor);
 	}
-
-
-	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
-	{
-		// 원본 액터 가져오기
-		AActor* SourceActor = nullptr;
-		AController* SourceController = nullptr;
-		ASharedCharacter* SourceCharacter = nullptr;
-		if (Source && Source->AbilityActorInfo.IsValid() && Source->AbilityActorInfo->AvatarActor.IsValid())
+	
+	if (TargetCharacter->HasAuthority()) {
+		if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 		{
-			SourceActor = Source->AbilityActorInfo->AvatarActor.Get();
-			SourceController = Source->AbilityActorInfo->PlayerController.Get();
-			if (SourceController == nullptr && SourceActor != nullptr)
+			// 원본 액터 가져오기
+			AActor* SourceActor = nullptr;
+			AController* SourceController = nullptr;
+			ASharedCharacter* SourceCharacter = nullptr;
+			if (Source && Source->AbilityActorInfo.IsValid() && Source->AbilityActorInfo->AvatarActor.IsValid())
 			{
-				if (APawn* Pawn = Cast<APawn>(SourceActor))
+				SourceActor = Source->AbilityActorInfo->AvatarActor.Get();
+				SourceController = Source->AbilityActorInfo->PlayerController.Get();
+				if (SourceController == nullptr && SourceActor != nullptr)
 				{
-					SourceController = Pawn->GetController();
+					if (APawn* Pawn = Cast<APawn>(SourceActor))
+					{
+						SourceController = Pawn->GetController();
+					}
+				}
+
+				// 컨트롤러를 사용하여 소스 폰 찾기
+				if (SourceController)
+				{
+					SourceCharacter = Cast<ASharedCharacter>(SourceController->GetPawn());
+				}
+				else
+				{
+					SourceCharacter = Cast<ASharedCharacter>(SourceActor);
+				}
+
+				// 설정된 경우 컨텍스트에 따라 원인 액터 설정
+				if (Context.GetEffectCauser())
+				{
+					SourceActor = Context.GetEffectCauser();
 				}
 			}
 
-			// 컨트롤러를 사용하여 소스 폰 찾기
-			if (SourceController)
+			// 적중 결과 추출 시도
+			FHitResult HitResult;
+			if (Context.GetHitResult())
 			{
-				SourceCharacter = Cast<ASharedCharacter>(SourceController->GetPawn());
-			}
-			else
-			{
-				SourceCharacter = Cast<ASharedCharacter>(SourceActor);
+				HitResult = *Context.GetHitResult();
 			}
 
-			// 설정된 경우 컨텍스트에 따라 원인 액터 설정
-			if (Context.GetEffectCauser())
+			// 데미지 정도를 로컬에 저장하고 데미지 속성을 삭제
+			const float LocalDamageDone = GetDamage();
+			SetDamage(0.f);
+
+			if (LocalDamageDone > 0)
 			{
-				SourceActor = Context.GetEffectCauser();
-			}
-		}
+				// 상태 변화를 적용한 후 고정합니다.
+				const float OldHealth = GetHealth();
+				SetHealth(FMath::Clamp(OldHealth - LocalDamageDone, 0.0f, GetMaxHealth()));
 
-		// 적중 결과 추출 시도
-		FHitResult HitResult;
-		if (Context.GetHitResult())
-		{
-			HitResult = *Context.GetHitResult();
-		}
+				if (TargetCharacter)
+				{
+					// 적절한 데미지.
 
-		// 데미지 정도를 로컬에 저장하고 데미지 속성을 삭제
-		const float LocalDamageDone = GetDamage();
-		SetDamage(0.f);
-
-		if (LocalDamageDone > 0)
-		{
-			// 상태 변화를 적용한 후 고정합니다.
-			const float OldHealth = GetHealth();
-			SetHealth(FMath::Clamp(OldHealth - LocalDamageDone, 0.0f, GetMaxHealth()));
-
-			if (TargetCharacter)
-			{
-				// 적절한 데미지.
-				TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor);
-				TargetCharacter->ChangeHP(-LocalDamageDone);
-				float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
-				if (elementDamage > 0) {
-					SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
-					TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
+					TargetCharacter->ChangeHP(-LocalDamageDone);
+					float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
+					if (elementDamage > 0) {
+						SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
+						TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
+					}
+					float persent = GetHealth() / GetMaxHealth();
+					UE_LOG(LogTemp, Error, TEXT("%f DamagePersent"), persent);
+					/*TargetCharacter->WidgetHPUpdate(persent);*/
+					TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor, persent);
 				}
+
+
+			}
+		}
+		else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+		{
+			if (GetHealth() >= GetMaxHealth()) {
+				SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+			}
+			else {
+				float persent = GetHealth() / GetMaxHealth();
+				TargetCharacter->WidgetHPUpdate(persent);
+				TargetCharacter->ChangeHP(DeltaValue);
+			}
+			if (TargetCharacter->bInventory) {
+				TargetCharacter->ChangeStateHandle();
 			}
 
-			float persent = GetHealth() / GetMaxHealth();
-			TargetCharacter->WidgetHPUpdate(persent);
 		}
-	}
-	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
-	{
-		if (GetHealth() >= GetMaxHealth()) {
-			SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		if (Health.GetBaseValue() <= 0)
+		{
+			ACPP_CharacterController* Controller = Cast<ACPP_CharacterController>(TargetController);
+			if (Controller) {
+				Controller->DeathInventoryClose();
+			}
+			TargetCharacter->RemovePassive();
+			TargetCharacter->Death();
 		}
-		else {
-			float persent = GetHealth() / GetMaxHealth();
-			TargetCharacter->WidgetHPUpdate(persent);
-			TargetCharacter->ChangeHP(DeltaValue);
-		}
-	}
-	if (TargetCharacter) {
-		if (TargetCharacter->bIsAlive)
-			TargetCharacter->ChangeStateHandle();
-	}
-	if (Health.GetBaseValue() <= 0)
-	{
-		ACPP_CharacterController* Controller = Cast<ACPP_CharacterController>(TargetController);
-		if (Controller) {
-			Controller->DeathInventoryClose();
-		}
-		TargetCharacter->RemovePassive();
-		TargetCharacter->Death();
 	}
 
 }
@@ -162,12 +166,18 @@ void UGASAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	//DOREPLIFETIME(UGASAttributeSet, Health);
-	DOREPLIFETIME(UGASAttributeSet, MaxHealth);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, AttackMagic, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, MeleeDefence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGASAttributeSet, MagicDefence, COND_None, REPNOTIFY_Always);
+	/*DOREPLIFETIME(UGASAttributeSet, MaxHealth);
 	DOREPLIFETIME(UGASAttributeSet, Stamina);
 	DOREPLIFETIME(UGASAttributeSet, AttackPower);
 	DOREPLIFETIME(UGASAttributeSet, AttackMagic);
 	DOREPLIFETIME(UGASAttributeSet, MeleeDefence);
-	DOREPLIFETIME(UGASAttributeSet, MagicDefence);
+	DOREPLIFETIME(UGASAttributeSet, MagicDefence);*/
 }
 
 // 이 함수가 호출되면 비율을 바탕으로 값을 조절함.

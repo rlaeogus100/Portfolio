@@ -122,9 +122,9 @@ public:
 		float ElementDamage(EElementEnum enemy, float OriginDamage);
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser);
+		void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser, float HPPersent);
 
-	void HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser);
+	void HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser, float HPPersent);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ChangeStateHandle();

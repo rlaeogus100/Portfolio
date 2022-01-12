@@ -226,9 +226,9 @@ float ASharedCharacter::ElementDamage(EElementEnum enemy, float OriginDamage)
 	return damage;
 }
 
-void ASharedCharacter::HandleDamage(float DamageAmount, const FHitResult& HitInfo, const FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser)
+void ASharedCharacter::HandleDamage(float DamageAmount, const FHitResult& HitInfo, const FGameplayTagContainer& DamageTags, ASharedCharacter* InstigatorCharacter, AActor* DamageCauser, float HPPersent)
 {
-	OnDamaged(DamageAmount, HitInfo, DamageTags, InstigatorCharacter, DamageCauser);
+	OnDamaged(DamageAmount, HitInfo, DamageTags, InstigatorCharacter, DamageCauser, HPPersent);
 }
 
 //int32 ASharedCharacter::GetCharacterLevel() const
