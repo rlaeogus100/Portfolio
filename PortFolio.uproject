@@ -11,8 +11,6 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"GameplayAbilities",
-				"UMGEditor",
-				"UnrealEd",
 				"UMG",
 				"AIModule"
 			]

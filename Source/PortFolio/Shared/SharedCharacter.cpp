@@ -23,7 +23,6 @@ ASharedCharacter::ASharedCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComp = CreateDefaultSubobject<UGASComponent>(TEXT("AbilitySystemComp"));
-	AbilitySystemComp->SetIsReplicated(true);
 
 	Attributes = CreateDefaultSubobject<UGASAttributeSet>(TEXT("Attributes"));
 
@@ -44,12 +43,6 @@ void ASharedCharacter::Tick(float DeltaTime)
 
 }
 
-void ASharedCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME_CONDITION(ASharedCharacter, bIsAlive, COND_SimulatedOnly)
-}
 
 // Called to bind functionality to input
 void ASharedCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -201,6 +194,20 @@ float ASharedCharacter::GetDefenseMagic()
 		return Attributes->GetMagicDefence();
 	else
 		return -1;
+}
+
+void ASharedCharacter::DeathCloseInventoryToServer_Implementation()
+{
+	DeathCloseInventoryToMultiCast();
+}
+
+void ASharedCharacter::DeathCloseInventoryToMultiCast_Implementation()
+{
+	if (Controller) {
+		ACPP_CharacterController* CharacterController = Cast<ACPP_CharacterController>(Controller);
+		if (CharacterController)
+			CharacterController->DeathInventoryClose();
+	}
 }
 
 float ASharedCharacter::ElementDamage(EElementEnum enemy, float OriginDamage)

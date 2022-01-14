@@ -149,12 +149,11 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 		}
 		if (Health.GetBaseValue() <= 0)
 		{
-			ACPP_CharacterController* Controller = Cast<ACPP_CharacterController>(TargetController);
-			if (Controller) {
-				Controller->DeathInventoryClose();
+			if (TargetCharacter->bIsAlive) {
+				TargetCharacter->DeathCloseInventoryToServer();
+				TargetCharacter->RemovePassive();
+				TargetCharacter->Death();
 			}
-			TargetCharacter->RemovePassive();
-			TargetCharacter->Death();
 		}
 	}
 

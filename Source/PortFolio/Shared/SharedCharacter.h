@@ -53,7 +53,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Abilities")
 		EElementEnum Element;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "State", replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "State")
 		bool bIsAlive = true;
 
 	bool bInventory = false;
@@ -68,7 +68,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -116,7 +115,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		float GetDefenseMagic();
 
-
+	UFUNCTION(server, Reliable)
+		void DeathCloseInventoryToServer();
+	UFUNCTION(netmulticast, Reliable)
+		void DeathCloseInventoryToMultiCast();
 
 	UFUNCTION(BlueprintCallable)
 		float ElementDamage(EElementEnum enemy, float OriginDamage);
