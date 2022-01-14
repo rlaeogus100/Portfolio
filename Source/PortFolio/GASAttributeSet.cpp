@@ -140,7 +140,7 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 			else {
 				float persent = GetHealth() / GetMaxHealth();
 				TargetCharacter->WidgetHPUpdate(persent);
-				TargetCharacter->ChangeHP(DeltaValue);
+				//TargetCharacter->ChangeHP(DeltaValue);
 			}
 			if (TargetCharacter->bInventory) {
 				TargetCharacter->ChangeStateHandle();
