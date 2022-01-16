@@ -10,6 +10,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "kismet/GameplayStatics.h"
+#include "Navigation/PathFollowingComponent.h"
 
 // 마우스 커서 숨기기 위해 임포트
 #include "Components/DecalComponent.h"
@@ -25,13 +26,29 @@ ACPP_CharacterController::ACPP_CharacterController()
 void ACPP_CharacterController::MoveToHitLocation_Implementation(FHitResult Hit)
 {
 	// VectorLength 대용
-	if (GetPawn()) {
-		if (MinClickDinstance <= ((GetPawn()->GetActorLocation()) - Hit.Location).Size())
+	if (GetCharacter()) {
+		if (MinClickDinstance <= ((GetCharacter()->GetActorLocation()) - Hit.Location).Size())
 		{
 			FVector Target = Hit.Location;
+			UPathFollowingComponent* PathFollowingComp = FindComponentByClass<UPathFollowingComponent>();
+			if (PathFollowingComp == nullptr)
+			{
+				PathFollowingComp = NewObject<UPathFollowingComponent>(this);
+				PathFollowingComp->RegisterComponentWithWorld(GetWorld());
+				PathFollowingComp->Initialize();
+			}
+
+			if (!PathFollowingComp->IsPathFollowingAllowed())
+			{
+				// After a client respawn we need to reinitialize the path following component
+				// The default code path that sorts this out only fires on the server after a Possess
+				PathFollowingComp->Initialize();
+			}
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Target);
-			this->GetPawn()->AddMovementInput(UKismetMathLibrary::GetDirectionUnitVector(GetPawn()->GetActorLocation(), Target), (GetPawn()->GetActorLocation() - Hit.Location).Size());
+			this->GetCharacter()->AddMovementInput(UKismetMathLibrary::GetDirectionUnitVector(GetCharacter()->GetActorLocation(), Target), (GetCharacter()->GetActorLocation() - Hit.Location).Size());
 		}
+
+
 	}
 }
 
@@ -85,6 +102,7 @@ void ACPP_CharacterController::OnSetDestination_Released()
 
 void ACPP_CharacterController::OnInventory_Pressed()
 {
+	character = Cast<ACharacterBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (character->bIsAlive) {
 		if (bInventory)
 		{
@@ -92,6 +110,7 @@ void ACPP_CharacterController::OnInventory_Pressed()
 			{
 				Inventory->InvisibleSelf();
 			}
+			else { UE_LOG(LogTemp, Error, TEXT("4"), 0); }
 		}
 		else
 		{
@@ -111,13 +130,17 @@ void ACPP_CharacterController::OnInventory_Pressed()
 						character->bInventory = true;
 						character->Inventory = Inventory;
 					}
+					else { UE_LOG(LogTemp, Error, TEXT("1"),0); }
 
 					bInventory = true;
 				}
+				else { UE_LOG(LogTemp, Error, TEXT("2"), 0); }
 			}
+			else { UE_LOG(LogTemp, Error, TEXT("3"), 0); }
 
 		}
 	}
+	else { UE_LOG(LogTemp, Error, TEXT("6"), 0); }
 }
 
 void ACPP_CharacterController::InvisibleInventory()

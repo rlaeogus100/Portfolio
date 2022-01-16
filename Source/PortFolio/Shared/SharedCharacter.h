@@ -117,6 +117,7 @@ public:
 
 	UFUNCTION(server, Reliable)
 		void DeathCloseInventoryToServer();
+
 	UFUNCTION(netmulticast, Reliable)
 		void DeathCloseInventoryToMultiCast();
 
