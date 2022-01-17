@@ -6,7 +6,6 @@
 
 UGASComponent::UGASComponent() {}
 
-
 FAbilityResultStruct UGASComponent::TryActiveAbilitiesByTagAndReturn(const FGameplayTagContainer& GameplayTagContainer, bool bAllowRemoteActivation)
 {
 	TArray<FGameplayAbilitySpec*> AbilitiesToActivate;
@@ -25,11 +24,7 @@ FAbilityResultStruct UGASComponent::TryActiveAbilitiesByTagAndReturn(const FGame
 		resultStruct.ability = ability;
 		resultStruct.bSuccess = bSuccess;
 	}
-
-
-
 	return resultStruct;
-
 }
 
 FCoolDownStruct UGASComponent::GetGameplayEffectDurationPersent(TSubclassOf<UGameplayEffect> SourceGameplayEffect, UAbilitySystemComponent* OptionalInstigatorFilterComponent, bool bEnforceOnGoingCheck)

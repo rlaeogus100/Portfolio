@@ -40,15 +40,11 @@ void ACPP_CharacterController::MoveToHitLocation_Implementation(FHitResult Hit)
 
 			if (!PathFollowingComp->IsPathFollowingAllowed())
 			{
-				// After a client respawn we need to reinitialize the path following component
-				// The default code path that sorts this out only fires on the server after a Possess
 				PathFollowingComp->Initialize();
 			}
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Target);
 			this->GetCharacter()->AddMovementInput(UKismetMathLibrary::GetDirectionUnitVector(GetCharacter()->GetActorLocation(), Target), (GetCharacter()->GetActorLocation() - Hit.Location).Size());
 		}
-
-
 	}
 }
 
