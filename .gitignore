@@ -5,6 +5,7 @@
 /Build
 /Plugins
 *_BuiltData.uasset
+/WindowsNoEditor
 
 # Visual Studio 2015 user specific files
 .vs/
