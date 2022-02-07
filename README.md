@@ -23,4 +23,4 @@
 
 ## 리슨 서버
 이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
-![속성1](https://user-images.githubusercontent.com/42613341/152776341-a8332c3e-eb69-42a2-8aff-383e8c7cdaf0.PNG)
+![서버 생성](https://user-images.githubusercontent.com/42613341/152781984-2b002dac-4c1e-439b-81a6-87fa8ae0614e.PNG)
