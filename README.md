@@ -16,11 +16,11 @@
   + [공격](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#공격)
     + [쿨타임](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#쿨타임)
     + [데미지 처리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#데미지-처리)
-  + [피격]
-  + [사망]
-    + [사망 시 아이템 드랍] 
-+ [GameplayCue]
-  + [피격 처리]
+  + [피격](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#피격)
+  + [사망](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#사망)
+    + [사망 시 아이템 드랍](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#사망-시-아이템-드랍)
++ [GameplayCue](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#GameplayCue)
+  + [피격 처리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#피격-처리)
 
 # 리슨 서버
 이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
@@ -51,6 +51,9 @@ GAS의 중점인 Ability(이하 어빌리티)입니다.
 어빌리티는 GameplayTask 라는 것을 사용해 흐름을 설정할 수 있습니다.
 하지만 이 프로젝트에서는 사망 어빌리티가 끝났을 때 아이템을 드랍하는 것만 사용하고 있습니다.
 
+어빌리티는 GameplayTag를 사용해 어빌리티의 동작을 관리할 수 있습니다.
+GameplayTag를 이용해 어빌리티를 실행시키거나, 어빌리티의 실행을 차단, 실행되고 있는 어빌리티를 캔슬할 수 있습니다.
+
 ## 공격
 공격은 AbilitySystemComponent(이하 ASC)에 등록된 공격 어빌리티를 실행하는 것으로 동작합니다.
 ASC는 리플리케이트가 되어, 어빌리티를 모든 클라이언트에서 동일하게 동작하도록 합니다.
@@ -61,6 +64,29 @@ ASC는 리플리케이트가 되어, 어빌리티를 모든 클라이언트에�
 ### 쿨타임
 GameplayEffect를 사용해 쿨타임을 설정할 수 있습니다.
 
+### 데미지 처리
+GameplayEffect를 사용해 데미지 처리를 합니다.
+
+## 피격
+피격시 캐릭터에 GameplayTag를 부여합니다.
+
+이 프로젝트에서는 공격 시 피격을 하면 그 공격 모션이 캔슬되고 피격몽타주를 실행하게 됩니다.
+
+## 사망
+사망 시 모든 모션을 종료하고 사망 몽타주를 바로 실행합니다.
+
+사망 몽타주의 실행이 끝나면 아이템을 일정 확률로 드랍합니다.
+
+### 사망 시 아이템 드랍
+데이터 테이블에 작성 되어있는 아이템 중 하나를 랜덤으로 드랍합니다.
+공격력 등의 수치는 드랍 시 랜덤으로 설정됩니다.
+
+# GameplayCue
+GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
+이 프로젝트에서는 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
+
+## 피격 처리
+데미지 계산 이후 작동됩니다.
 
 
 
