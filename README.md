@@ -1,5 +1,5 @@
 # GAS Portfolio
-언리얼 엔진4의 GameplayAbilitySystem을 사용하기 위한 프로젝트.
+언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 사용하기 위한 프로젝트.
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
@@ -21,16 +21,6 @@
 + [GameplayCue]
   + [피격 처리]
 
-
-
-
-
-
-
-
-
-
-
-
-
-# ㅁㄴㅇㄹ
+## 리슨 서버
+이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
+https://user-images.githubusercontent.com/42613341/152776341-a8332c3e-eb69-42a2-8aff-383e8c7cdaf0.PNG
