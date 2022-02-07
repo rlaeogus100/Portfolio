@@ -3,7 +3,7 @@
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
-* [구현 내용]
+* [구현 내용](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#ㅁㄴㅇㄹ)
 
 # 구현 내용
 + [리슨 서버]
@@ -20,3 +20,5 @@
     + [사망 시 아이템 드랍] 
 + [GameplayCue]
   + [피격 처리]
+
+#ㅁㄴㅇㄹ
