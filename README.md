@@ -3,19 +3,19 @@
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
-* [구현 내용](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#ㅁㄴㅇㄹ)
+* [구현 내용](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#구현-내용)
 
 # 구현 내용
-+ [리슨 서버]
-+ [인벤토리]
-  + [장비 교체]
-    + [공격 방식 변경]
-    + [속성 변경]
-  + [아이템 드랍]
-+ [GameplayAbility]
-  + [공격]
-    + [쿨타임]
-    + [데미지 처리]
++ [리슨 서버](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#리슨-서버)
++ [인벤토리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#인벤토리)
+  + [장비 교체](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#장비-교체)
+    + [공격 방식 변경](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#공격-방식-변경)
+    + [속성 변경](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#속성-변경)
+  + [아이템 드랍](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#아이템-드랍)
++ [GameplayAbility](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#GameplayAbility)
+  + [공격](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#공격)
+    + [쿨타임](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#쿨타임)
+    + [데미지 처리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#데미지-처리)
   + [피격]
   + [사망]
     + [사망 시 아이템 드랍] 
