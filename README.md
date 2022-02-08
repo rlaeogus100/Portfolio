@@ -33,10 +33,32 @@ GAS는 AbilitySystemComponent의 리플리케이트를 통해 어떤 동작을 �
 
 # 인벤토리
 인벤토리는 무기와 장신구를 변경할 수 있습니다.
-<!-- 인벤토리  -->
+I키를 누르면 인벤토리가 활성화 됩니다.
+좌상단의 수치는 아이템을 장착하거나, 피격, 회복을 하는 등의 동작을 통해 변경되는 수치입니다.
+![인벤토리1](https://user-images.githubusercontent.com/42613341/152953495-f70254f3-8c0b-4af1-a89a-0f626999deec.PNG)
+
+아이템의 정보는 플레이어 컨트롤러가 지니고 있으며, 인벤토리를 호출할 때 플레이어 컨트롤러가 지니고 있는 아이템의 맵을 이용해 인벤토리에 배치해 보여줍니다. 
+![인벤토리](https://user-images.githubusercontent.com/42613341/152953934-6899e962-0c7e-4da6-818f-c46e83f50095.PNG)
+
+아이템의 배치를 변경할 수 있습니다.
+![인벤토리 위치 변경](https://user-images.githubusercontent.com/42613341/152954356-79f1152b-5402-4591-b967-28fd86b036ec.gif)
+
+아이템 칸은 각각의 위젯 블루프린트로 구성되어 있으며, 드래그 앤 드랍으로 이동할 수 있습니다.
+![위치변경1](https://user-images.githubusercontent.com/42613341/152955318-85dbb904-1beb-4d7f-a22b-0f30a0cfbfc8.PNG)
+'''C++
+void ACPP_CharacterController::ChangeItem()
+{
+	if (Inventory != nullptr)
+	{
+		Inventory->ChangeItem();
+	}
+}
+'''
 
 ## 장비 교체
 장비는 드래그 앤 드랍으로 교체할 수 있습니다.
+
+
 
 ### 공격 방식 변경
 무기를 교체하면 공격 방식이 변경됩니다.
