@@ -24,9 +24,12 @@
 
 # 리슨 서버
 이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
+GAS는 AbilitySystemComponent의 리플리케이트를 통해 어떤 동작을 실행할 때 그 동작을 리플리케이트 시켜줍니다.
 ![서버 생성](https://user-images.githubusercontent.com/42613341/152781984-2b002dac-4c1e-439b-81a6-87fa8ae0614e.PNG)
 <!-- <img src="https://user-images.githubusercontent.com/42613341/152781984-2b002dac-4c1e-439b-81a6-87fa8ae0614e.PNG"  width="400" height="300"/> -->
-<!-- 서버 들어가는 이미지 -->
+![서버접속2](https://user-images.githubusercontent.com/42613341/152949573-e5a2e257-b548-4445-9352-730202f53ac5.gif)
+![서버접속3](https://user-images.githubusercontent.com/42613341/152949637-9dd703de-cfdd-4e1e-9786-f94963083087.gif)
+
 
 # 인벤토리
 인벤토리는 무기와 장신구를 변경할 수 있습니다.
