@@ -1,5 +1,5 @@
 # GAS Portfolio
-언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 사용하기 위한 프로젝트.
+언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 사용하기 위한 프로젝트입.
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
@@ -94,13 +94,17 @@ void ACPP_CharacterController::ChangeItem()
 
 ## 아이템 드랍
 아이템을 드랍할 수 있습니다.
+![아이템드랍1](https://user-images.githubusercontent.com/42613341/152965995-4070ebe8-a81e-4ab5-903f-a716391e0bf4.gif)
+
+![아이템드랍2](https://user-images.githubusercontent.com/42613341/152966005-8948089c-1527-4aaa-9484-f2f1ff3ff0a1.gif)
+
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
 공격, 피격, 사망등의 동작은 어빌리티로 관리됩니다.
 
 어빌리티는 GameplayTask 라는 것을 사용해 흐름을 설정할 수 있습니다.
-하지만 이 프로젝트에서는 사망 어빌리티가 끝났을 때 아이템을 드랍하는 것만 사용하고 있습니다.
+이 프로젝트에서는 사망 어빌리티가 끝났을 때 아이템을 드랍하는 것만 사용하고 있습니다.
 
 어빌리티는 GameplayTag를 사용해 어빌리티의 동작을 관리할 수 있습니다.
 GameplayTag를 이용해 어빌리티를 실행시키거나, 어빌리티의 실행을 차단, 실행되고 있는 어빌리티를 캔슬할 수 있습니다.
