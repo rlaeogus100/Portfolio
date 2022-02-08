@@ -45,7 +45,7 @@ I키를 누르면 인벤토리가 활성화 됩니다.
 
 아이템 칸은 각각의 위젯 블루프린트로 구성되어 있으며, 드래그 앤 드랍으로 이동할 수 있습니다.
 ![위치변경1](https://user-images.githubusercontent.com/42613341/152955318-85dbb904-1beb-4d7f-a22b-0f30a0cfbfc8.PNG)
-'''C++
+```
 void ACPP_CharacterController::ChangeItem()
 {
 	if (Inventory != nullptr)
@@ -53,18 +53,40 @@ void ACPP_CharacterController::ChangeItem()
 		Inventory->ChangeItem();
 	}
 }
-'''
+```
+![위치변경2](https://user-images.githubusercontent.com/42613341/152955939-6b1f2148-e37d-42c8-898a-088fdd91cb0f.PNG)
 
 ## 장비 교체
 장비는 드래그 앤 드랍으로 교체할 수 있습니다.
+![장비변경1](https://user-images.githubusercontent.com/42613341/152956237-60990447-fda4-4b12-b147-7be9ab02d67b.gif)
 
-
+장착한 무기의 기존 아이템 칸은 공란으로 변경하거나 원래 장착되어 있던 아이템의 정보로 변경합니다.
+![무기변경1](https://user-images.githubusercontent.com/42613341/152956363-346e2c94-650a-420a-a3bc-51d80f4d0295.PNG)
 
 ### 공격 방식 변경
 무기를 교체하면 공격 방식이 변경됩니다.
 
+##### 검
+![무기1](https://user-images.githubusercontent.com/42613341/152961143-88639198-d4e6-4e2a-9a18-15b7fbb8327d.gif)
+
+##### 마법
+![Honeycam 2022-02-08 18-46-03](https://user-images.githubusercontent.com/42613341/152961218-1b32145a-adf2-4d64-b3f4-bcc20ff39d4c.gif)
+
+무기를 변경 시 애니메이션을 바꾸고 공격 시 비교할 구조체를 변경합니다.
+![무기2](https://user-images.githubusercontent.com/42613341/152961600-53023681-227e-46a4-97fa-d4618995ea39.PNG)
+
+![무기3](https://user-images.githubusercontent.com/42613341/152962397-ecac0659-8c71-4ec1-b59a-a06dd9b01d1c.PNG)
+
+
 ### 속성 변경
 장신구를 교체하면 공격 속성이 변경됩니다.
+
+##### 검
+![속성1](https://user-images.githubusercontent.com/42613341/152963414-fd99836b-d32c-4535-b85c-916ecf3cbf87.gif)
+
+##### 마법
+![속성변경2](https://user-images.githubusercontent.com/42613341/152963442-10ce7f21-3110-4ca7-8fcb-47d038113547.gif)
+
 
 ## 아이템 드랍
 아이템을 드랍할 수 있습니다.
