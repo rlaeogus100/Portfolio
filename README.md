@@ -72,7 +72,7 @@ void ACPP_CharacterController::ChangeItem()
 ##### 마법
 ![Honeycam 2022-02-08 18-46-03](https://user-images.githubusercontent.com/42613341/152961218-1b32145a-adf2-4d64-b3f4-bcc20ff39d4c.gif)
 
-무기를 변경 시 애니메이션을 바꾸고 공격 시 비교할 구조체를 변경합니다.
+무기를 변경 시 애니메이션을 바꾸고 공격 시 비교할  변경합니다.
 ![무기2](https://user-images.githubusercontent.com/42613341/152961600-53023681-227e-46a4-97fa-d4618995ea39.PNG)
 
 ![무기3](https://user-images.githubusercontent.com/42613341/152962397-ecac0659-8c71-4ec1-b59a-a06dd9b01d1c.PNG)
