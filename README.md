@@ -80,12 +80,16 @@ void ACPP_CharacterController::ChangeItem()
 
 ### 속성 변경
 장신구를 교체하면 공격 속성이 변경됩니다.
-
-##### 검
 ![속성1](https://user-images.githubusercontent.com/42613341/152963414-fd99836b-d32c-4535-b85c-916ecf3cbf87.gif)
+![속성변경2](https://user-images.githubusercontent.com/42613341/152963442-10ce7f21-3110-4ca7-8fcb-47d038113547.gif)
+##### 검
+검의 경우는 직접 트레일이 변경됩니다.
+![속성변경 1](https://user-images.githubusercontent.com/42613341/152965112-10bfcf70-61e6-4239-97c6-96a025a5d6c8.PNG)
+
 
 ##### 마법
-![속성변경2](https://user-images.githubusercontent.com/42613341/152963442-10ce7f21-3110-4ca7-8fcb-47d038113547.gif)
+마법은 공격버튼을 누르면 작동되는 어빌리티가 달라집니다.
+![속성변경 2](https://user-images.githubusercontent.com/42613341/152965196-534180f8-0a93-4e09-bb59-dd69c2993ae7.PNG)
 
 
 ## 아이템 드랍
