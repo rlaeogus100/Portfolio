@@ -98,6 +98,9 @@ void ACPP_CharacterController::ChangeItem()
 
 ![아이템드랍2](https://user-images.githubusercontent.com/42613341/152966005-8948089c-1527-4aaa-9484-f2f1ff3ff0a1.gif)
 
+아이템을 인벤토리에서 아이템칸이 아닌 곳에 드랍을 하게 되면 아이템을 맵에 스폰하고 플레이어컨트롤러에 존재하는 아이템을 삭제합니다.
+
+필드의 아이템은 리플리케이트 되어 다른 플레이어가 아이템을 좌클릭하여 획득하면 모든 클라이언트에서 필드의 아이템이 삭제됩니다.
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
