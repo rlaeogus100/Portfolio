@@ -105,6 +105,8 @@ void ACPP_CharacterController::ChangeItem()
 
 # AttributeSet
 
+# GameplayEffect
+
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
 공격, 피격, 사망등의 동작은 어빌리티로 관리됩니다.
@@ -184,7 +186,11 @@ GameplayEffect를 사용해 데미지 처리를 합니다.
 
 ![데미지처리2](https://user-images.githubusercontent.com/42613341/153569880-be6e493a-b8be-4b2f-b6c8-601df4ae8660.PNG)
 
+이 [게임플레이 이펙트](#gameplayeffect) 에서는 데미지의 처리를 위해 데미지 계산기를 사용합니다.
 
+데미지 계산기는 현재의 [어트리뷰트](#attributeset)값을 이용해 본인의 공격력과 타겟의 방어력을 받아와 공격력 - 방어력의 공식으로 데미지를 계산합니다.
+
+그리고 특정 약점 속성으로 공격을 했다면 추가 데미지를 입힙니다.
 
 ## 피격
 피격시 캐릭터에 GameplayTag를 부여합니다.
