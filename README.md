@@ -171,9 +171,20 @@ GameplayEffect를 사용해 쿨타임을 설정할 수 있습니다.
 
 ![쿨타임 2](https://user-images.githubusercontent.com/42613341/153565809-be7e68f0-e5df-4c62-a549-ab9f44f7cebb.gif)
 
+[GamePlayAbility](#gameplayability)의 첫번째 이미지에 있는 CommitAbility에서 쿨타임과 코스트 등의 처리를 할 수 있습니다.
 
 ### 데미지 처리
 GameplayEffect를 사용해 데미지 처리를 합니다.
+
+![데미지처리1](https://user-images.githubusercontent.com/42613341/153568780-888a13b5-4ebb-4cf7-a0c6-310f53a35844.PNG) 
+###### 프로젝트 내의 ANS_SwordAttack
+
+피격 대상이 지니고 있는 ASC를 타겟으로 특정 GameplayEffect를 수행합니다.
+이 경우는 데미지를 처리해야 하니 GE_GetDamage를 수행합니다.
+
+![데미지처리2](https://user-images.githubusercontent.com/42613341/153569880-be6e493a-b8be-4b2f-b6c8-601df4ae8660.PNG)
+
+
 
 ## 피격
 피격시 캐릭터에 GameplayTag를 부여합니다.
