@@ -3,10 +3,10 @@
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
-* [구현 내용](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#구현-내용)
+* [구현 내용](#구현-내용)
 
 # 구현 내용
-+ [리슨 서버](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#리슨-서버)
++ [리슨 서버](#리슨-서버)
 + [인벤토리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#인벤토리)
   + [장비 교체](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#장비-교체)
     + [공격 방식 변경](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#공격-방식-변경)
@@ -20,7 +20,7 @@
   + [사망](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#사망)
     + [사망 시 아이템 드랍](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#사망-시-아이템-드랍)
 + [GameplayCue](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#GameplayCue)
-  + [피격 처리](https://github.com/rlaeogus100/Portfolio/blob/main/README.md#피격-처리)
+  + [피격 처리](#피격-처리)
 
 # 리슨 서버
 이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
@@ -45,7 +45,7 @@ I키를 누르면 인벤토리가 활성화 됩니다.
 
 아이템 칸은 각각의 위젯 블루프린트로 구성되어 있으며, 드래그 앤 드랍으로 이동할 수 있습니다.
 ![위치변경1](https://user-images.githubusercontent.com/42613341/152955318-85dbb904-1beb-4d7f-a22b-0f30a0cfbfc8.PNG)
-```
+```c++
 void ACPP_CharacterController::ChangeItem()
 {
 	if (Inventory != nullptr)
@@ -102,15 +102,53 @@ void ACPP_CharacterController::ChangeItem()
 
 필드의 아이템은 리플리케이트 되어 다른 플레이어가 아이템을 좌클릭하여 획득하면 모든 클라이언트에서 필드의 아이템이 삭제됩니다.
 
+# AttributeSet
+
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
 공격, 피격, 사망등의 동작은 어빌리티로 관리됩니다.
+
+![어빌리티1](https://user-images.githubusercontent.com/42613341/153562742-2a10fdc4-c6be-4776-b3d4-3c770fc6d709.PNG)
 
 어빌리티는 GameplayTask 라는 것을 사용해 흐름을 설정할 수 있습니다.
 이 프로젝트에서는 사망 어빌리티가 끝났을 때 아이템을 드랍하는 것만 사용하고 있습니다.
 
 어빌리티는 GameplayTag를 사용해 어빌리티의 동작을 관리할 수 있습니다.
 GameplayTag를 이용해 어빌리티를 실행시키거나, 어빌리티의 실행을 차단, 실행되고 있는 어빌리티를 캔슬할 수 있습니다.
+
+게임 도중에 어빌리티를 삭제하거나 부여하는 등의 관리가 가능하나 이 프로젝트에서는 폰을 소유하게 되었을 때 함수를 사용해 어빌리티를 부여하고 있습니다.
+
+
+```c++
+void ASharedCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (AbilitySystemComp) {
+		AbilitySystemComp->InitAbilityActorInfo(this, this);
+
+		InitializeAttributes();
+		GiveAbilities();
+	}
+}
+```
+
+![어빌리티 부여](https://user-images.githubusercontent.com/42613341/153564197-c62c4563-3133-42e8-92da-34c8eeaa524f.PNG)
+
+```c++
+void ASharedCharacter::GiveAbilities()
+{
+	if (HasAuthority() && AbilitySystemComp && DefaultAbilities.Num() > 0)
+	{
+		for (TSubclassOf<UGASGameplayAbility>& StartupAbility : DefaultAbilities)
+		{
+			AbilitySystemComp->GiveAbility(
+				FGameplayAbilitySpec(StartupAbility, 1, INDEX_NONE, this));
+		}
+
+	}
+}
+```
 
 ## 공격
 공격은 AbilitySystemComponent(이하 ASC)에 등록된 공격 어빌리티를 실행하는 것으로 동작합니다.
@@ -119,8 +157,19 @@ ASC는 리플리케이트가 되어, 어빌리티를 모든 클라이언트에�
 공격 어빌리티는 동작되게 되면 몽타주를 실행하는데 만약 마법 공격이라면 투사체를 스폰합니다.
 투사체 또한 리플리케이트 되어 서버에서 데미지 처리를 하게 됩니다.
 
+![어빌리티2](https://user-images.githubusercontent.com/42613341/153564691-b145a8ea-8a34-4fac-9dc5-37a495ba4213.PNG)
+
+어빌리티의 설정에 리플리케이트 관련 옵션이 있으나 이는 모두에게 작동하도록 하는 것과는 약간 다른 측면이 있으므로, ASC에서 실행을 하게 해 ASC를 리플리케이트 하는 것으로 네트워킹을 하고 있습니다.
+
 ### 쿨타임
 GameplayEffect를 사용해 쿨타임을 설정할 수 있습니다.
+
+![쿨타임](https://user-images.githubusercontent.com/42613341/153565474-4ce3ab71-f37d-4ae5-bdee-dc2dc6b3adf2.PNG)
+
+0.7초로 이펙트의 지속시간을 부여하고, 이펙트가 지속이 되어있는 동안 CoolDown.Attack.Sword의 GameplayTag를 부여합니다.
+
+![쿨타임 2](https://user-images.githubusercontent.com/42613341/153565809-be7e68f0-e5df-4c62-a549-ab9f44f7cebb.gif)
+
 
 ### 데미지 처리
 GameplayEffect를 사용해 데미지 처리를 합니다.
