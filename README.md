@@ -177,9 +177,9 @@ GameplayEffect를 사용해 쿨타임을 설정할 수 있습니다.
 
 ### 데미지 처리
 GameplayEffect를 사용해 데미지 처리를 합니다.
-
-![데미지처리1](https://user-images.githubusercontent.com/42613341/153568780-888a13b5-4ebb-4cf7-a0c6-310f53a35844.PNG) 
 ###### 프로젝트 내의 ANS_SwordAttack
+![데미지처리1](https://user-images.githubusercontent.com/42613341/153568780-888a13b5-4ebb-4cf7-a0c6-310f53a35844.PNG) 
+
 
 피격 대상이 지니고 있는 ASC를 타겟으로 특정 GameplayEffect를 수행합니다.
 이 경우는 데미지를 처리해야 하니 GE_GetDamage를 수행합니다.
@@ -188,8 +188,82 @@ GameplayEffect를 사용해 데미지 처리를 합니다.
 
 이 [게임플레이 이펙트](#gameplayeffect) 에서는 데미지의 처리를 위해 데미지 계산기를 사용합니다.
 
-데미지 계산기는 현재의 [어트리뷰트](#attributeset)값을 이용해 본인의 공격력과 타겟의 방어력을 받아와 공격력 - 방어력의 공식으로 데미지를 계산합니다.
+![GE_Damage](https://user-images.githubusercontent.com/42613341/153928086-2abd56ed-887e-4834-9506-d9fd1f018ea9.PNG)
 
+데미지 계산기는 현재의 [어트리뷰트](#attributeset)값을 이용해 본인의 공격력과 타겟의 방어력을 받아와 공격력 - 방어력의 공식으로 데미지를 계산합니다.
+###### DamageExcutionCalculation.cpp
+```c++
+	// --------------------------------------
+	//	Damage Done = AttackPower > AttackMagic? AttackPower - MeleeDefence : AttackMagic - MagicDefence;
+	// 스태프는 마법데미지만 지니고 있고 검, 총 등은 물리 데미지만 지니고 있으므로 둘 중 높은 쪽의 데미지만 취급한다.
+	// --------------------------------------
+
+	float MeleeDefence = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().MeleeDefenceDef, EvaluationParameters, MeleeDefence);
+
+	float MagicDefence = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().MeleeDefenceDef, EvaluationParameters, MagicDefence);
+
+	float AttackPower = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackPowerDef, EvaluationParameters, AttackPower);
+
+	float AttackMagic = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatic().AttackMagicDef, EvaluationParameters, AttackMagic);
+
+	float DamageDone = 0.f;
+
+	if (AttackPower >= AttackMagic) 
+	{
+
+		DamageDone = AttackPower - MeleeDefence;
+	}
+	else 
+	{
+		DamageDone = AttackMagic - MagicDefence;
+	}
+	if (DamageDone > 0.f)
+	{
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatic().DamageProperty, EGameplayModOp::Additive, DamageDone));
+	}
+
+}
+```
+
+###### GASAttributeSet.cpp
+```c++
+			FHitResult HitResult;
+			if (Context.GetHitResult())
+			{
+				HitResult = *Context.GetHitResult();
+			}
+
+			// 데미지 정도를 로컬에 저장하고 데미지 속성을 삭제
+			const float LocalDamageDone = GetDamage();
+			SetDamage(0.f);
+
+			if (LocalDamageDone > 0)
+			{
+				// 상태 변화를 적용한 후 고정합니다.
+				const float OldHealth = GetHealth();
+				SetHealth(FMath::Clamp(OldHealth - LocalDamageDone, 0.0f, GetMaxHealth()));
+
+				if (TargetCharacter)
+				{
+					// 적절한 데미지.
+					TargetCharacter->ChangeHP(-LocalDamageDone);
+					
+					// 약점 속성인지 파악한 후 맞으면 데미지를 리턴함
+					float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);				
+					if (elementDamage > 0) {
+						SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
+						TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
+					}
+					float persent = GetHealth() / GetMaxHealth();
+					UE_LOG(LogTemp, Error, TEXT("%f DamagePersent"), persent);
+					/*TargetCharacter->WidgetHPUpdate(persent);*/
+					TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor, persent);
+				}
+```
 그리고 특정 약점 속성으로 공격을 했다면 추가 데미지를 입힙니다.
 
 ## 피격
