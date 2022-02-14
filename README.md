@@ -177,9 +177,9 @@ GameplayEffect를 사용해 쿨타임을 설정할 수 있습니다.
 
 ### 데미지 처리
 GameplayEffect를 사용해 데미지 처리를 합니다.
-###### 프로젝트 내의 ANS_SwordAttack
-![데미지처리1](https://user-images.githubusercontent.com/42613341/153568780-888a13b5-4ebb-4cf7-a0c6-310f53a35844.PNG) 
 
+###### ANS_SwordAttack
+![데미지처리1](https://user-images.githubusercontent.com/42613341/153568780-888a13b5-4ebb-4cf7-a0c6-310f53a35844.PNG) 
 
 피격 대상이 지니고 있는 ASC를 타겟으로 특정 GameplayEffect를 수행합니다.
 이 경우는 데미지를 처리해야 하니 GE_GetDamage를 수행합니다.
@@ -266,19 +266,52 @@ GameplayEffect를 사용해 데미지 처리를 합니다.
 ```
 그리고 특정 약점 속성으로 공격을 했다면 추가 데미지를 입힙니다.
 
+데미지 처리가 끝나면 [게임플레이 큐](#gameplaycue)를 실행합니다.
+
+![데미지3](https://user-images.githubusercontent.com/42613341/153936891-78669ec7-ce36-48c6-ba1a-524b014fd491.PNG)
+
+###### GC_Hit
+![데미지4](https://user-images.githubusercontent.com/42613341/153937541-29ede25e-ebdb-41ea-a5f6-e0128dbaf809.PNG)
+![데미지5](https://user-images.githubusercontent.com/42613341/153937583-30a0f9be-d306-461f-9ee6-810c03c0c9f7.PNG)
+
+이 큐가 동작하면 실행중인 모든 몽타주를 멈추고, 피격 모션을 어빌리티를 통해 동작시킵니다.
+
 ## 피격
 피격시 캐릭터에 GameplayTag를 부여합니다.
 
-이 프로젝트에서는 공격 시 피격을 하면 그 공격 모션이 캔슬되고 피격몽타주를 실행하게 됩니다.
+![피격](https://user-images.githubusercontent.com/42613341/153938209-3f28c5b1-4d8e-44e1-9e4d-59beca6e244f.PNG)
+
+피격 모션이 실행중이면 다른 모션은 실행되지 않습니다.
+
+###### GA_TrollAttack
+![피격2](https://user-images.githubusercontent.com/42613341/153939094-ef65ef6a-4f73-4bb4-af1a-4f32ae633829.PNG)
+
+예를 들어 몬스터의 공격 어빌리티의 경우 피격모션의 태그가 존재하면 실행되지 않습니다.
 
 ## 사망
-사망 시 모든 모션을 종료하고 사망 몽타주를 바로 실행합니다.
+데미지 처리를 한 후 체력이 0 이하로 떨어지면 사망 어빌리티를 실행합니다.
+
+```c++
+	if (Health.GetBaseValue() <= 0)
+	{
+		if (TargetCharacter->bIsAlive) {
+			TargetCharacter->DeathCloseInventoryToServer();
+			TargetCharacter->RemovePassive();
+			TargetCharacter->Death();
+		}
+	}
+```
+
+![사망2](https://user-images.githubusercontent.com/42613341/153941391-5a5da368-81c6-4c01-a54b-f1ef0f50c9ef.PNG)
 
 사망 몽타주의 실행이 끝나면 아이템을 일정 확률로 드랍합니다.
 
 ### 사망 시 아이템 드랍
 데이터 테이블에 작성 되어있는 아이템 중 하나를 랜덤으로 드랍합니다.
 공격력 등의 수치는 드랍 시 랜덤으로 설정됩니다.
+
+###### GA_TrollDeath
+![사망3](https://user-images.githubusercontent.com/42613341/153942681-55bf2b09-99aa-411d-8d4c-66210ae3809c.PNG)
 
 # GameplayCue
 GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
