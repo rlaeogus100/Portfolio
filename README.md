@@ -13,6 +13,9 @@
     + [속성 변경](#속성-변경)
   + [아이템 드랍](#아이템-드랍)
 + [AttributeSet](#attributeset) 
++ [GameplayEffect](#gameplayeffect)
++ [GameplayCue](#gameplaycue)
+  + [피격 처리](#피격-처리)
 + [GameplayAbility](#gameplayability)
   + [공격](#공격)
     + [쿨타임](#쿨타임)
@@ -20,8 +23,6 @@
   + [피격](#피격)
   + [사망](#사망)
     + [사망 시 아이템 드랍](#사망-시-아이템-드랍)
-+ [GameplayCue](#gameplaycue)
-  + [피격 처리](#피격-처리)
 
 # 리슨 서버
 이 프로젝트는 GAS를 효율적으로 사용하기 위해 리슨 서버의 형식으로 구현되었습니다.
