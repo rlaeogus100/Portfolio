@@ -104,8 +104,25 @@ void ACPP_CharacterController::ChangeItem()
 필드의 아이템은 리플리케이트 되어 다른 플레이어가 아이템을 좌클릭하여 획득하면 모든 클라이언트에서 필드의 아이템이 삭제됩니다.
 
 # AttributeSet
+AttributeSet 이하 어트리뷰트셋은 공격력, 방어력 등의 캐릭터의 상태에 관한 변수를 저장하는 것입니다.
+
+어트리뷰트셋은 변수가 변경되기 전, [게임플레이 이펙트](#gameplayeffect)가 실행된 후, 게임플레이 이펙트가 실행되기 전 등으로 나뉘어 함수를 실행하는 타이밍을 설정할 수 있습니다.
+
+이 프로젝트에서는 데미지 계산기가 처리되어 데미지를 리턴받았을 때, 체력이 변경되었을 때 등에 함수가 동작하도록 되어 있습니다.
+
 
 # GameplayEffect
+GameplayEffect 이하 이펙트[어트리뷰트셋](#attributeset)의 값을 변경하기 위해 사용됩니다.
+
+이 프로젝트에서는 공격을 하고 적이 피격되었을 때, 초당 HP가 회복될 때, 공격의 쿨타임을 체크할 때 등의 상황에서 사용되고 있습니다.
+
+# GameplayCue
+GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
+
+이 프로젝트에서는 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
+
+## 피격 처리
+데미지 계산 이후 작동됩니다.
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
@@ -312,14 +329,6 @@ GameplayEffect를 사용해 데미지 처리를 합니다.
 
 ###### GA_TrollDeath
 ![사망3](https://user-images.githubusercontent.com/42613341/153942681-55bf2b09-99aa-411d-8d4c-66210ae3809c.PNG)
-
-# GameplayCue
-GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
-이 프로젝트에서는 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
-
-## 피격 처리
-데미지 계산 이후 작동됩니다.
-
 
 
 
