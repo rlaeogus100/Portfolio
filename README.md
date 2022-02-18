@@ -105,15 +105,177 @@ void ACPP_CharacterController::ChangeItem()
 필드의 아이템은 리플리케이트 되어 다른 플레이어가 아이템을 좌클릭하여 획득하면 모든 클라이언트에서 필드의 아이템이 삭제됩니다.
 
 # AttributeSet
-AttributeSet 이하 어트리뷰트셋은 공격력, 방어력 등의 캐릭터의 상태에 관한 변수를 저장하는 것입니다.
+AttributeSet(이하 어트리뷰트셋)은 공격력, 방어력 등의 캐릭터의 상태에 관한 변수를 저장합니다.
+###### GASAttributeSet.h
+``` c++
+UCLASS()
+class PORTFOLIO_API UGASAttributeSet : public UAttributeSet
+{
+	GENERATED_BODY()
+public:
+	int a;
+	UGASAttributeSet();
+
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
+	
+	void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
+	// 체력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Health)
+		FGameplayAttributeData Health;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Health)
+		UFUNCTION()
+		virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
+
+	// 최대 체력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MaxHealth)
+		FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxHealth)
+
+		UFUNCTION()
+		virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+
+	// 기력 추가
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Stamina)
+		FGameplayAttributeData Stamina;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Stamina)
+
+		UFUNCTION()
+		virtual void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
+
+```
 
 어트리뷰트셋은 변수가 변경되기 전, [게임플레이 이펙트](#gameplayeffect)가 실행된 후, 게임플레이 이펙트가 실행되기 전 등으로 나뉘어 함수를 실행하는 타이밍을 설정할 수 있습니다.
 
+###### GASAttributeSet.cpp
+```c++
+void UGASAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	// 이 함수가 호출될 때 마다 체력을 최대값으로 바꿈.
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetMaxHealthAttribute())
+	{
+		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
+	}
+
+	// 체력이 최대 체력을 넘어가는지.
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxHealthAttribute().GetNumericValueChecked(this));
+	}
+}
+```
+```c++
+void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	FGameplayEffectContextHandle Context = Data.EffectSpec.GetContext();
+	UAbilitySystemComponent* Source = Context.GetOriginalInstigatorAbilitySystemComponent();
+	const FGameplayTagContainer& SourceTags = *Data.EffectSpec.CapturedSourceTags.GetAggregatedTags();
+
+	// 사용 가능한 경우 이전과 새 사이의 델타 계산
+	float DeltaValue = 0;
+	if (Data.EvaluatedData.ModifierOp == EGameplayModOp::Type::Additive)
+	{
+		// 이 값이 가법적인 경우 나중에 전달할 원시 델타 값을 저장합니다.
+		DeltaValue = Data.EvaluatedData.Magnitude;
+	}
+
+	// 타겟 액터를 구하십시오. 이 액터는 우리의 소유자가 되어야 합니다.
+	AActor* TargetActor = nullptr;
+	AController* TargetController = nullptr;
+	ASharedCharacter* TargetCharacter = nullptr;
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		TargetCharacter = Cast<ASharedCharacter>(TargetActor);
+	}
+	...
+```
+
 이 프로젝트에서는 데미지 계산기가 처리되어 데미지를 리턴받았을 때, 체력이 변경되었을 때 등에 함수가 동작하도록 되어 있습니다.
 
+###### 데미지 처리
+```c++
+...
+if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+{
+	// 원본 액터 가져오기
+	AActor* SourceActor = nullptr;
+	AController* SourceController = nullptr;
+	ASharedCharacter* SourceCharacter = nullptr;
+	if (Source && Source->AbilityActorInfo.IsValid() && Source->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		SourceActor = Source->AbilityActorInfo->AvatarActor.Get();
+		SourceController = Source->AbilityActorInfo->PlayerController.Get();
+		if (SourceController == nullptr && SourceActor != nullptr)
+		{
+			if (APawn* Pawn = Cast<APawn>(SourceActor))
+			{
+				SourceController = Pawn->GetController();
+			}
+		}
 
+		// 컨트롤러를 사용하여 소스 폰 찾기
+		if (SourceController)
+		{
+			SourceCharacter = Cast<ASharedCharacter>(SourceController->GetPawn());
+		}
+		else
+		{
+			SourceCharacter = Cast<ASharedCharacter>(SourceActor);
+		}
+
+		// 설정된 경우 컨텍스트에 따라 원인 액터 설정
+		if (Context.GetEffectCauser())
+		{
+			SourceActor = Context.GetEffectCauser();
+		}
+	}
+
+	// 적중 결과 추출 시도
+	FHitResult HitResult;
+	if (Context.GetHitResult())
+	{
+		HitResult = *Context.GetHitResult();
+	}
+
+	// 데미지 정도를 로컬에 저장하고 데미지 속성을 삭제
+	const float LocalDamageDone = GetDamage();
+	SetDamage(0.f);
+
+	if (LocalDamageDone > 0)
+	{
+		// 상태 변화를 적용한 후 고정합니다.
+		const float OldHealth = GetHealth();
+		SetHealth(FMath::Clamp(OldHealth - LocalDamageDone, 0.0f, GetMaxHealth()));
+
+		if (TargetCharacter)
+		{
+			// 적절한 데미지.
+
+			TargetCharacter->ChangeHP(-LocalDamageDone);
+			// 약점 속성인지 파악한 후 맞으면 데미지를 리턴함
+			float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);		
+			if (elementDamage > 0) {
+				SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
+				TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
+			}
+			float persent = GetHealth() / GetMaxHealth();
+			UE_LOG(LogTemp, Error, TEXT("%f DamagePersent"), persent);
+			/*TargetCharacter->WidgetHPUpdate(persent);*/
+			TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor, persent);
+		}
+	}
+}
+...
+```
 # GameplayEffect
-GameplayEffect 이하 이펙트[어트리뷰트셋](#attributeset)의 값을 변경하기 위해 사용됩니다.
+GameplayEffect(이하 이펙트)[어트리뷰트셋](#attributeset)의 값을 변경하기 위해 사용됩니다.
 
 이 프로젝트에서는 공격을 하고 적이 피격되었을 때, 초당 HP가 회복될 때, 공격의 쿨타임을 체크할 때 등의 상황에서 사용되고 있습니다.
 
@@ -121,9 +283,6 @@ GameplayEffect 이하 이펙트[어트리뷰트셋](#attributeset)의 값을 변
 GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
 
 이 프로젝트에서는 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
-
-## 피격 처리
-데미지 계산 이후 작동됩니다.
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
