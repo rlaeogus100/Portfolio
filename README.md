@@ -284,7 +284,11 @@ GameplayEffect(이하 이펙트)는 [어트리뷰트셋](#attributeset)의 값�
 # GameplayCue
 GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
 
+GameplayTag로 실행할 수 있으며, GameplayCue의 태그는 GameplayCue.asdf.asdf의 형식으로 GameplayCue가 먼저 나와야 합니다.
+
 이 프로젝트에서는 피격 시 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
+
+[사용 예시](#gc_hit)
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
