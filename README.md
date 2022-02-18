@@ -15,7 +15,6 @@
 + [AttributeSet](#attributeset) 
 + [GameplayEffect](#gameplayeffect)
 + [GameplayCue](#gameplaycue)
-  + [피격 처리](#피격-처리)
 + [GameplayAbility](#gameplayability)
   + [공격](#공격)
     + [쿨타임](#쿨타임)
@@ -275,14 +274,17 @@ if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 ...
 ```
 # GameplayEffect
-GameplayEffect(이하 이펙트)[어트리뷰트셋](#attributeset)의 값을 변경하기 위해 사용됩니다.
+GameplayEffect(이하 이펙트)는 [어트리뷰트셋](#attributeset)의 값을 변경하기 위해 사용됩니다.
 
-이 프로젝트에서는 공격을 하고 적이 피격되었을 때, 초당 HP가 회복될 때, 공격의 쿨타임을 체크할 때 등의 상황에서 사용되고 있습니다.
+###### GE_CharacterDefault
+![기본값 부여](https://user-images.githubusercontent.com/42613341/154622165-bfccbe17-f292-4a5b-b8cd-673eab05da6b.PNG)
+
+이 프로젝트에서는 공격을 하고 적이 피격되었을 때 데미지를 계산, 초당 HP가 회복될 때, 공격의 쿨타임을 체크할 때 등의 상황에서 사용되고 있습니다.
 
 # GameplayCue
 GameplayAbility 혹은 GameplayEffect의 처리 후 작동됩니다.
 
-이 프로젝트에서는 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
+이 프로젝트에서는 피격 시 데미지 계산 후 관련 이미터와 사운드의 스폰에 사용되었습니다.
 
 # GameplayAbility
 GAS의 중점인 Ability(이하 어빌리티)입니다.
