@@ -118,7 +118,8 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 					// 적절한 데미지.
 
 					TargetCharacter->ChangeHP(-LocalDamageDone);
-					float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);
+					// 약점 속성인지 파악한 후 맞으면 데미지를 리턴함
+					float elementDamage = TargetCharacter->ElementDamage(SourceCharacter->Element, LocalDamageDone);		
 					if (elementDamage > 0) {
 						SetHealth(FMath::Clamp(OldHealth - LocalDamageDone - elementDamage, 0.0f, GetMaxHealth()));
 						TargetCharacter->ChangeHP(-elementDamage, SourceCharacter->Element);
@@ -128,8 +129,6 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 					/*TargetCharacter->WidgetHPUpdate(persent);*/
 					TargetCharacter->HandleDamage(LocalDamageDone, HitResult, SourceTags, SourceCharacter, SourceActor, persent);
 				}
-
-
 			}
 		}
 		else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
