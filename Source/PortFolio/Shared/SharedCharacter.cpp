@@ -134,7 +134,6 @@ void ASharedCharacter::GetActiveAbilitiesWithTags(const FGameplayTagContainer& G
 {
 	TArray<FGameplayAbilitySpec*> AbilitiesToActivate;
 	AbilitySystemComp->GetActivatableGameplayAbilitySpecsByAllMatchingTags(GameplayTagContainer, AbilitiesToActivate, false);
-
 	// Iterate the list of all ability specs
 	for (FGameplayAbilitySpec* Spec : AbilitiesToActivate)
 	{
