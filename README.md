@@ -1,9 +1,17 @@
 # GAS Portfolio
 언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 학습하기 위한 프로젝트입니다.
-
+프로젝트는 UnrealEngine 4.27로 구성되었습니다.
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
+* [초기 설정](#초기-설정)
 * [구현 내용](#구현-내용)
+
+# 초기 설정
+프로젝트를 다운로드 받은 후 uproject파일을 우클릭 해 Generate Visual Studio Project File을 클릭합니다.
+sin파일이 생성된 것을 확인 후 uproject를 실행합니다.
+이 때 버전이 4.27이상이 되지 않는다면 맵이나 다른 파일이 깨질 수 있습니다.
+컴파일 에러가 발생한다면, 폴더 경로에 한글이 섞여 있는지 확인해야 합니다.
+
 
 # 구현 내용
 + [리슨 서버](#리슨-서버)
