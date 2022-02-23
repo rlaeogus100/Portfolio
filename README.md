@@ -1,5 +1,5 @@
 # GAS Portfolio
-언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 사용하기 위한 프로젝트입니다.
+언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 학습하기 위한 프로젝트입니다.
 
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
