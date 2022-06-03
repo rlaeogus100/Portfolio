@@ -1,8 +1,11 @@
 # GAS Portfolio
 언리얼 엔진4의 GameplayAbilitySystem(이하 GAS)을 학습하기 위한 프로젝트입니다.
 프로젝트는 UnrealEngine 4.27로 구성되었습니다.
+
 # 목차
 * [소개 영상](https://youtu.be/sdG4s10_APc)
+
+[![Video Label](http://img.youtube.com/vi/sdG4s10_APc/0.jpg)](https://youtu.be/sdG4s10_APc)
 * [초기 설정](#초기-설정)
 * [구현 내용](#구현-내용)
 
